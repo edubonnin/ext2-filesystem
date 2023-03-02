@@ -52,7 +52,7 @@ int initSB(unsigned int nbloques, unsigned int ninodos)
     SB.cantBloquesLibres = nbloques;
     SB.cantInodosLibres = ninodos;
     SB.totBloques = nbloques;
-    SB.totinodos = ninodos;
+    SB.totInodos = ninodos;
 
     // ESCRIBMOS EL SUPERBLOQUE EN MEMORIA
     if (bwrite(posSB, &SB) == FALLO)
@@ -79,7 +79,7 @@ int initMB()
     unsigned char bufferMB[BLOCKSIZE];
     memset(bufferMB, '1', BLOCKSIZE);
 
-    //EN EL CASO DE QUE EL NUMERO DE BLOQUES QUE OCUPA EL MB LOS ESCRIBIRÁ
+    // EN EL CASO DE QUE EL NUMERO DE BLOQUES QUE OCUPA EL MB LOS ESCRIBIRÁ
     for (int i = SB.posPrimerBloqueMB; i < nbloquesMB + SB.posPrimerBloqueMB; i++)
     {
         bwrite(i, bufferMB);
@@ -91,7 +91,7 @@ int initMB()
         bufferMB[i] = 255;
     }
 
-    //OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
+    // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
     int decimal_sobrante = 0;
     int potencia = 7;
     for (int i = 0; i < sobrante; i++)
@@ -101,13 +101,13 @@ int initMB()
     }
     bufferMB[bytesMB + 1] = decimal_sobrante;
 
-    //ESCRIBE EL RESTO DE BYTES A 0
+    // ESCRIBE EL RESTO DE BYTES A 0
     for (int i = bytesMB + 2; i < BLOCKSIZE; i++)
     {
         bufferMB[i] = 0;
     }
-    
-    //ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
+
+    // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
     SB.cantBloquesLibres -= nbloquesMB;
 }
@@ -122,11 +122,11 @@ int initAI()
     struct superbloque SB;
     bread(posSB, &SB);
 
-    int salir=0;
+    int salir = 0;
     int contInodos = SB.posPrimerInodoLibre + 1;
-    for (int i = SB.posPrimerBloqueAI; i <= SB.posUltimoBloqueAI && salir==0; i++)
+    for (int i = SB.posPrimerBloqueAI; i <= SB.posUltimoBloqueAI && salir == 0; i++)
     {
-        bread(i,inodos);
+        bread(i, inodos);
         for (int j = 0; j < BLOCKSIZE / INODOSIZE; j++)
         {
             inodos[j].tipo = 'l'; // libre
@@ -138,9 +138,9 @@ int initAI()
             else
             {
                 inodos[j].punterosDirectos[0] = UINT_MAX;
-                salir=1;
+                salir = 1;
             }
         }
+        bwrite(i, inodos);
     }
-    bwrite(i,inodos);
 }
