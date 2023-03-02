@@ -65,8 +65,9 @@ int initSB(unsigned int nbloques, unsigned int ninodos)
 int initMB()
 {
     struct superbloque SB;
+    bread(posSB, &SB);
     // NUMERO DE BITS DEL MAPA DE BITS
-    int nbits = tamSB + tamMB() + tamAI();
+    int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totBloques);
     // NUMERO DE BYTES DEL MAPA DE BITS
     int bytesMB = (nbits / 8) % BLOCKSIZE;
     // NUMERO DE BYTES SOBRANTES
@@ -108,6 +109,7 @@ int initMB()
     
     //ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
+    SB.cantBloquesLibres -= nbloquesMB;
 }
 
 int initAI()
