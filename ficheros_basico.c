@@ -93,11 +93,11 @@ int initMB()
 
     // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
     int decimal_sobrante = 0;
-    int potencia = 7;
+    int pot = 7;
     for (int i = 0; i < sobrante; i++)
     {
-        decimal_sobrante += pow(2, potencia);
-        potencia--;
+        decimal_sobrante += potencia(2, pot);
+        pot--;
     }
     bufferMB[bytesMB + 1] = decimal_sobrante;
 
@@ -110,6 +110,17 @@ int initMB()
     // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
     SB.cantBloquesLibres -= nbloquesMB;
+}
+
+//FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
+int potencia(int a, int b)
+{
+    int pot = a;
+    for (size_t i = 0; i < b; i++)
+    {
+        pot *= a;
+    }
+    return pot;
 }
 
 int initAI()
