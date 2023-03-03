@@ -1,4 +1,8 @@
 #include "ficheros_basico.h"
+#include <math.h>
+
+double pow(double x, double y);
+
 
 // CALCULA EL TAMAÑO EN BLOQUES DEL MAPA DE BITS
 int tamMB(unsigned int nbloques)
@@ -92,12 +96,21 @@ int initMB()
     }
 
     // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
+<<<<<<< HEAD
     int decimal_sobrante = 0;
     int pot = 7;
     for (int i = 0; i < sobrante; i++)
     {
         decimal_sobrante += potencia(2, pot);
         pot--;
+=======
+    double decimal_sobrante = 0.0;
+    double potencia = 7.0;
+    for (int i = 0; i < sobrante; i++)
+    {
+        decimal_sobrante += pow(2.0, potencia);
+        potencia--;
+>>>>>>> 56d4206 (aa)
     }
     bufferMB[bytesMB + 1] = decimal_sobrante;
 
@@ -110,6 +123,7 @@ int initMB()
     // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
     SB.cantBloquesLibres -= nbloquesMB;
+    return EXITO;
 }
 
 //FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
@@ -154,4 +168,5 @@ int initAI()
         }
         bwrite(i, inodos);
     }
+    return EXITO;
 }

@@ -2,6 +2,10 @@
 
 int main(int argc, char **argv)
 {
+
+    unsigned int nBloques = atoi(argv[2]);
+    unsigned int nInodos = nBloques / 4;
+
     if (argc != 3)
     {
         fprintf(stderr, "ERROR: Numero de parametros incorrecto. (Correcto: ./mi_mkfs <nombre_dispositivo> <nbloques>)");
@@ -18,7 +22,7 @@ int main(int argc, char **argv)
         {
             bwrite(i, buf);
         }
-        initSB(argv[2], atoi(argv[2])/ 4);
+        initSB(nBloques, nInodos);
         initMB();
         initAI();
         // DESMONTAMOS EL FICHERO
