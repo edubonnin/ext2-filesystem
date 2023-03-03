@@ -67,7 +67,7 @@ int initMB()
     struct superbloque SB;
     bread(posSB, &SB);
     // NUMERO DE BITS DEL MAPA DE BITS
-    int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totBloques);
+    int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totInodos);
     // NUMERO DE BYTES DEL MAPA DE BITS
     int bytesMB = (nbits / 8) % BLOCKSIZE;
     // NUMERO DE BYTES SOBRANTES
