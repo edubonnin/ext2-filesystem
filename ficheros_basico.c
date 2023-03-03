@@ -155,3 +155,38 @@ int initAI()
         bwrite(i, inodos);
     }
 }
+
+//FUNCIÓN QUE  MODIFICA UN BIT EN EL MB
+int escribir_bit(unsigned int nbloque, unsigned int bit)
+{
+    //LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN NECESARIA
+    struct superbloque SB;
+    bread(posSB, &SB);
+    //POSICION DEL BYTE QUE CONTIENE EL BIT EN EL MAPA DE BITS
+    int posbyte = nbloque / 8;
+    //POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR 
+    int posbit = nbloque % 8;
+    //NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
+    int nbloqueMB = posbyte / BLOCKSIZE;
+    //NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
+    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueMB;
+    //BUFFER PARA LEER EL BLOQUE A MODIFICAR
+    unsigned char bufferMB[BLOCKSIZE];
+    bread(nbloqueabs, &bufferMB);
+
+    //POSICIÓN DEL BYTE A MODIFICAR DENTRO DEL BLOQUE
+    posbyte = posbyte % BLOCKSIZE;
+    //MASCARA A APLICAR EN EL BYTE A MODIFICAR
+    unsigned char mascara = 128;
+
+    if (bit == 1)
+    {
+
+    } 
+    else 
+    {
+
+    }
+
+
+}
