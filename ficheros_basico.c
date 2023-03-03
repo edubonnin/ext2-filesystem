@@ -1,5 +1,16 @@
 #include "ficheros_basico.h"
 
+// FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
+int potencia(int a, int b)
+{
+    int pot = a;
+    for (size_t i = 0; i < b; i++)
+    {
+        pot *= a;
+    }
+    return pot;
+}
+
 // CALCULA EL TAMAÑO EN BLOQUES DEL MAPA DE BITS
 int tamMB(unsigned int nbloques)
 {
@@ -112,17 +123,6 @@ int initMB()
     SB.cantBloquesLibres -= nbloquesMB;
 }
 
-//FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
-int potencia(int a, int b)
-{
-    int pot = a;
-    for (size_t i = 0; i < b; i++)
-    {
-        pot *= a;
-    }
-    return pot;
-}
-
 int initAI()
 {
     unsigned char bufferAI[BLOCKSIZE];
@@ -156,37 +156,216 @@ int initAI()
     }
 }
 
-//FUNCIÓN QUE  MODIFICA UN BIT EN EL MB
+// FUNCIÓN QUE  MODIFICA UN BIT EN EL MB
 int escribir_bit(unsigned int nbloque, unsigned int bit)
 {
-    //LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN NECESARIA
+    // LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN NECESARIA
     struct superbloque SB;
     bread(posSB, &SB);
-    //POSICION DEL BYTE QUE CONTIENE EL BIT EN EL MAPA DE BITS
+    // POSICION DEL BYTE QUE CONTIENE EL BIT EN EL MAPA DE BITS
     int posbyte = nbloque / 8;
-    //POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR 
+    // POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR
     int posbit = nbloque % 8;
-    //NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
-    int nbloqueMB = posbyte / BLOCKSIZE;
-    //NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
-    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueMB;
-    //BUFFER PARA LEER EL BLOQUE A MODIFICAR
+    // NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
+    int nbloqueabs = posbyte / BLOCKSIZE;
+    // NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
+    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueabs;
+    // BUFFER PARA LEER EL BLOQUE A MODIFICAR
     unsigned char bufferMB[BLOCKSIZE];
     bread(nbloqueabs, &bufferMB);
 
-    //POSICIÓN DEL BYTE A MODIFICAR DENTRO DEL BLOQUE
+    // POSICIÓN DEL BYTE A MODIFICAR DENTRO DEL BLOQUE
     posbyte = posbyte % BLOCKSIZE;
-    //MASCARA A APLICAR EN EL BYTE A MODIFICAR
+    // MASCARA A APLICAR EN EL BYTE A MODIFICAR
     unsigned char mascara = 128;
+    mascara >>= posbit;
 
     if (bit == 1)
     {
-
-    } 
-    else 
+        bufferMB[posbyte] |= mascara;
+    }
+    else
     {
+        bufferMB[posbyte] &= ~mascara;
+    }
+    if (FALLO == bwrite(nbloqueabs, bufferMB))
+    {
+        return FALLO;
+    }
+    return EXITO;
+}
 
+// FUNCION QUE LEE EL BIT DE MB
+char leer_bit(unsigned int nbloque)
+{
+    // LECTURA DEL SUPERBLOQUE
+    struct superbloque SB;
+    bread(nbloque, &SB);
+    // POSICION DEL BYTE QUE CONTIENE EL BIT EN EL MAPA DE BITS
+    int posbyte = nbloque / 8;
+    // POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR
+    int posbit = nbloque % 8;
+    // NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
+    int nbloqueabs = posbyte / BLOCKSIZE;
+    // NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
+    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueabs;
+    // BUFFER PARA LEER EL BLOQUE A MODIFICAR
+    unsigned char bufferMB[BLOCKSIZE];
+    // LECTURA DEL BLOQUE A LEER
+    bread(nbloqueabs, bufferMB);
+    // POSCION DEL BYTE A LEER
+    posbyte = posbyte % BLOCKSIZE;
+    unsigned char mascara = 128;  // 10000000
+    mascara >>= posbit;           // DESPLAZAMIENTO DE BITS A LA DERECHA
+    mascara &= bufferMB[posbyte]; // OPERADOR AND
+    mascara >>= (7 - posbit);     // DESPLAZAMINETO DE BITS A LA DERECHA Y GUARDAR EL REASULTADO DEL BIT
+    // DEVOLUCION DEL BIT LEIDO
+    return mascara;
+}
+
+int reservar_bloque()
+{
+    int nbloque;
+    int bloquesllenos = 0;
+    struct superbloque SB;
+    bread(posSB, &SB);
+
+    if (SB.cantBloquesLibres <= 0)
+    {
+        return FALLO;
     }
 
+    unsigned char bufferMB[BLOCKSIZE];
+    unsigned char bufferAux[BLOCKSIZE];
 
+    memset(bufferAux, 255, BLOCKSIZE);
+
+    // NOS SITUAMOS A LA PRIMERA POSICION DEL MB
+    int nbloqueabs = SB.posPrimerBloqueMB;
+    // LEEMOS EL PRIMER BLOQUE
+    bread(nbloqueabs, bufferMB);
+
+    // MIENTRAS LOS BLOQUES DEL MAPA DE BITS NO CONTENGAN BLOQUES LIBRES HAREMOS LAS SIGUIENTES OPERACIONES
+    while (memcmp(bufferMB, bufferAux, BLOCKSIZE) == 0)
+    {
+        // NOS MOVENOS AL SIGUIENTE BLOQUE DEL MB
+        nbloqueabs++;
+        // AUMENTAMOS EN UNO EL NUMERO DE BLOQUES LEIDOS
+        bloquesllenos++;
+        // LEEMOS EL SIGUIENTE BLOQUE
+        bread(nbloqueabs, bufferMB);
+    }
+
+    // POSICION DEL PRIMER BYTE DIFERENTE A 255(1111 1111) DENTRO DEL BLOQUE DEL MB
+    int posbyte = 0;
+
+    while (bufferMB[posbyte] == 255)
+    {
+        posbyte++;
+    }
+
+    unsigned char mascara = 128; // 10000000 & 000000
+    int posbit = 0;
+    while (bufferMB[posbyte] & mascara)
+    {                            // operador AND para bits
+        bufferMB[posbyte] <<= 1; // desplazamiento de bits a la izquierda
+        posbit++;
+    }
+
+    nbloque = ((nbloqueabs - SB.posPrimerBloqueMB) * BLOCKSIZE + posbyte) * 8 + posbit;
+    escribir_bit(nbloque, 1);
+    SB.cantBloquesLibres--;
+    bwrite(posSB, &SB);
+    memset(bufferAux, 0, BLOCKSIZE); // Volvmemos a inicializar a 0
+    bwrite(nbloque, bufferAux);
+
+    return nbloque; // NUMERO DE BLOQUE RESERVADO ((== PRIMER BLOQUE LIBRE)
+}
+
+int liberar_bloque(unsigned int nbloque)
+{
+    // LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN DEL SISTEMA
+    struct superbloque SB;
+    bread(posSB, &SB);
+    // ESCRIBIMOS EL BIT CORRESPONDIENTE AL BLOQUE A 0
+    escribir_bit(nbloque, 0);
+    // AUMENTAMOS LA CANTIDAD DE BLOQUES LIBRES
+    SB.cantBloquesLibres++;
+    bwrite(posSB, &SB);
+
+    return nbloque;
+}
+int escribir_inodo(unsigned int ninodo, struct inodo *inodo)
+{
+    // LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN DEL SISTEMA
+    struct superbloque SB;
+    bread(posSB, &SB);
+    unsigned int numerobloque = SB.posPrimerBloqueAI + (ninodo / (BLOCKSIZE / INODOSIZE));
+    struct inodo inodos[BLOCKSIZE / INODOSIZE];
+    bread(numerobloque, inodos);
+    inodos[ninodo % (BLOCKSIZE / INODOSIZE)] = *inodo; // posible error
+    if (bwrite(numerobloque, inodos))
+    {
+        return FALLO;
+    }
+    return EXITO;
+}
+
+int leer_inodo(unsigned int ninodo, struct inodo *inodo)
+{
+    // LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN DEL SISTEMA
+    struct superbloque SB;
+    bread(posSB, &SB);
+
+    struct inodo inodos[BLOCKSIZE / INODOSIZE];
+
+    // BLOQUE EN EL QUE SE ENCUENTRA EL INODO EN EL ARRAY DE INODOS
+    int nbloque = (ninodo * INODOSIZE) / BLOCKSIZE;
+    // BLOQUE ABSOLUTO EN EL QUE SE ENCUENTRA
+    int nbloqueabs = SB.posPrimerBloqueAI + nbloque;
+    int err = bread(nbloqueabs, &inodos);
+    inodo = &inodos[ninodo % (BLOCKSIZE / INODOSIZE)];
+
+    if (err == FALLO)
+    {
+        return FALLO;
+    }
+    return EXITO;
+}
+
+int reservar_inodo(unsigned char tipo, unsigned char permisos)
+{
+    struct superbloque SB;
+    struct inodo inodo;
+
+    bread(posSB, &SB);
+    if (SB.cantInodosLibres <= 0)
+    {
+        return FALLO;
+    }
+    int posInodoReservado = SB.posPrimerInodoLibre;
+    leer_inodo(posInodoReservado, &inodo);
+    SB.posPrimerInodoLibre = inodo.punterosDirectos[0]; // Actualizamos la lista enlazada de inodos libres
+
+    inodo.tipo = tipo;
+    inodo.permisos = permisos;
+    inodo.nlinks = 1;
+    inodo.tamEnBytesLog = 0;
+    inodo.atime = time(NULL);
+    inodo.mtime = time(NULL);
+    inodo.ctime = time(NULL);
+    inodo.numBloquesOcupados = 0;
+    for (int i = 0; i < 12; i++)
+    {
+        inodo.punterosDirectos[i] = 0;
+    }
+    for (int i = 0; i < 3; i++)
+    {
+        inodo.punterosIndirectos[i] = 0;
+    }
+
+    escribir_inodo(posInodoReservado, &inodo);
+    SB.cantInodosLibres--;
+    bwrite(posSB, &SB);
+    return posInodoReservado;
 }

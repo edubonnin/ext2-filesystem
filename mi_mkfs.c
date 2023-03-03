@@ -2,6 +2,10 @@
 
 int main(int argc, char **argv)
 {
+
+    int nbloques=atoi(argv[2]);
+    int ninodos=nbloques/4;
+
     if (argc != 3)
     {
         fprintf(stderr, "ERROR: Numero de parametros incorrecto. (Correcto: ./mi_mkfs <nombre_dispositivo> <nbloques>)");
@@ -18,9 +22,12 @@ int main(int argc, char **argv)
         {
             bwrite(i, buf);
         }
-        initSB(argv[2], atoi(argv[2])/ 4);
+        initSB(nbloques, ninodos);
         initMB();
         initAI();
+
+        reservar_inodo('d',7);
+
         // DESMONTAMOS EL FICHERO
         bumount();
     }
