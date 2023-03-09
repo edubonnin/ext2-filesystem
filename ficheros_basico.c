@@ -121,6 +121,7 @@ int initMB()
     // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
     SB.cantBloquesLibres -= nbloquesMB;
+    return EXITO;
 }
 
 int initAI()
@@ -154,6 +155,7 @@ int initAI()
         }
         bwrite(i, inodos);
     }
+    return EXITO;
 }
 
 // FUNCIÓN QUE  MODIFICA UN BIT EN EL MB
@@ -167,9 +169,9 @@ int escribir_bit(unsigned int nbloque, unsigned int bit)
     // POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR
     int posbit = nbloque % 8;
     // NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
-    int nbloqueabs = posbyte / BLOCKSIZE;
+    int nbloqueMB = posbyte / BLOCKSIZE;
     // NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
-    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueabs;
+    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueMB;
     // BUFFER PARA LEER EL BLOQUE A MODIFICAR
     unsigned char bufferMB[BLOCKSIZE];
     bread(nbloqueabs, &bufferMB);
@@ -206,9 +208,9 @@ char leer_bit(unsigned int nbloque)
     // POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR
     int posbit = nbloque % 8;
     // NUMERO DEL BLOQUE EN QUE SE ENCUENTRA EL BIT DENTRO DEL MAPA DE BITS
-    int nbloqueabs = posbyte / BLOCKSIZE;
+    int nbloqueMB = posbyte / BLOCKSIZE;
     // NUMERO DEL BLOQUE DONDE SE ENCUENTRA EL BIT A MODIFICAR DENTRO DE EL SISTEMA
-    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueabs;
+    int nbloqueabs = SB.posPrimerBloqueMB + nbloqueMB;
     // BUFFER PARA LEER EL BLOQUE A MODIFICAR
     unsigned char bufferMB[BLOCKSIZE];
     // LECTURA DEL BLOQUE A LEER

@@ -3,8 +3,8 @@
 int main(int argc, char **argv)
 {
 
-    int nbloques=atoi(argv[2]);
-    int ninodos=nbloques/4;
+    int nbloques = atoi(argv[2]);
+    int ninodos = nbloques / 4;
 
     if (argc != 3)
     {
@@ -26,7 +26,7 @@ int main(int argc, char **argv)
         initMB();
         initAI();
 
-        reservar_inodo('d',7);
+        reservar_inodo('d', 7);
 
         // DESMONTAMOS EL FICHERO
         bumount();
