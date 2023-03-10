@@ -7,6 +7,8 @@
 #include <unistd.h>   // SEEK_SET, read(), write(), open(), close(), lseek()
 #include <errno.h>    //errno
 #include <string.h>   // strerror()
+#include <limits.h>   // 
+#include <time.h>     //
 
 #define BLOCKSIZE 1024 // bytes
 

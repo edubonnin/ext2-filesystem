@@ -1,11 +1,10 @@
 #include "ficheros_basico.h"
 
-#define DEBUGSB 1 // Debugger del Super Bloque
-#define DEBUG1 1  // Debugger del nivel 1
-#define DEBUG2 1  // Debugger del nivel 2
-#define DEBUG3 1  // Debugger del nivel 3
-#define DEBUG4 0  // Debugger del nivel 4
-#define DEBUG7 0  // Debugger del nivel 7
+#define DEBUG1 1 // Debugger del nivel 1: SUPERBLOQUE
+#define DEBUG2 0 // Debugger del nivel 2
+#define DEBUG3 1 // Debugger del nivel 3
+#define DEBUG4 0 // Debugger del nivel 4
+#define DEBUG7 0 // Debugger del nivel 7
 
 // Funciones
 void mostrar_buscar_entrada(char *camino, char reservar);
@@ -35,7 +34,7 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-#if DEBUGSB
+#if DEBUG1
     // Contenido del superbloque.
     printf("\nDATOS DEL SUPERBLOQUE\n");
     printf("posPrimerBloqueMB = %d\n", SB.posPrimerBloqueMB);
@@ -52,12 +51,9 @@ int main(int argc, char const *argv[])
     printf("totInodos = %d\n", SB.totInodos);
 #endif
 
-#if DEBUG1
+#if DEBUG2
     printf("\nsizeof struct superbloque: %ld\n", sizeof(struct superbloque));
     printf("sizeof struct inodo:  %ld\n", sizeof(struct inodo));
-#endif
-
-#if DEBUG2
     printf("\nRECORRIDO LISTA ENLAZADA DE INODOS LIBRES\n");
     // Podéis hacer también un recorrido de la lista de inodos libres (mostrando para cada inodo el campo punterosDirectos[0]).
     struct inodo inodos[BLOCKSIZE / INODOSIZE];
@@ -97,11 +93,6 @@ int main(int argc, char const *argv[])
             contlibres++;
         }
     }
-#endif
-
-#if DEBUG1
-    // Probación el tamaño del tipo time_t para vuestra plataforma/compilador:
-    printf("\nsizeof time_t is: %ld\n", sizeof(time_t));
 #endif
 
 #if DEBUG3
@@ -149,8 +140,8 @@ int main(int argc, char const *argv[])
     printf("permisos: %i\n", inodo.permisos);
     printf("ID: %d \nATIME: %s \nMTIME: %s \nCTIME: %s\n", ninodo, atime, mtime, ctime);
     printf("nlinks: %i\n", inodo.nlinks);
-    printf("tamaño en bytes lógicos: %i\n", inodo.tamEnBytesLog);
-    printf("Número de bloques ocupados: %i\n", inodo.numBloquesOcupados);
+    printf("tamEnBytesLog: %i\n", inodo.tamEnBytesLog);
+    printf("numBloquesOcupados: %i\n", inodo.numBloquesOcupados);
 #endif
 
 #if DEBUG4

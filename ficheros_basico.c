@@ -1,5 +1,7 @@
 #include "ficheros_basico.h"
 
+#define DEBUG3 1
+
 // FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
 int potencia(int a, int b)
 {
@@ -73,55 +75,98 @@ int initSB(unsigned int nbloques, unsigned int ninodos)
     return EXITO;
 }
 
+// **** BORRRAR ***************************************************************
+// int initMB()
+// {
+//     struct superbloque SB;
+//     bread(posSB, &SB);
+//     // NUMERO DE BITS DEL MAPA DE BITS
+//     int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totInodos);
+//     // NUMERO DE BYTES DEL MAPA DE BITS
+//     int bytesMB = (nbits / 8) % BLOCKSIZE;
+//     // NUMERO DE BITS SOBRANTES
+//     int sobrante = nbits % 8;
+//     // NUMERO DE BLOQUES LLENOS DEL MAPA DE BITS
+//     int nbloquesMB = (nbits / 8) / BLOCKSIZE;
+
+//     // BUFFER DE TAMAÑO DE 1 BLOQUE
+//     unsigned char bufferMB[BLOCKSIZE];
+//     memset(bufferMB, '1', BLOCKSIZE);
+
+//     // EN EL CASO DE QUE EL NUMERO DE BLOQUES QUE OCUPA EL MB LOS ESCRIBIRÁ
+//     for (int i = SB.posPrimerBloqueMB; i < nbloquesMB + SB.posPrimerBloqueMB; i++)
+//     {
+//         bwrite(i, bufferMB);
+//     }
+
+//     // RELLENA EL BUFFER CON LOS 1s DESEADOS
+//     for (int i = 0; i < bytesMB; i++)
+//     {
+//         bufferMB[i] = 255;
+//     }
+
+//     // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
+//     int decimal_sobrante = 0;
+//     int pot = 7;
+//     for (int i = 0; i < sobrante; i++)
+//     {
+//         decimal_sobrante += potencia(2, pot);
+//         pot--;
+//     }
+//     bufferMB[bytesMB + 1] = decimal_sobrante;
+
+//     // ESCRIBE EL RESTO DE BYTES A 0
+//     for (int i = bytesMB + 2; i < BLOCKSIZE; i++)
+//     {
+//         bufferMB[i] = 0;
+//     }
+
+//     // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
+//     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
+//     SB.cantBloquesLibres -= tamMB(SB.totBloques);
+//     bwrite(posSB, &SB);
+//     return EXITO;
+// }
+// ****************************************************************************
+
 int initMB()
 {
+    // Buffer
+    unsigned char buffer[BLOCKSIZE];
+
+    // Todas posiciones a 0.
+    if (memset(buffer, 0, BLOCKSIZE) == NULL)
+    {
+        return EXIT_FAILURE;
+    }
+
+    // Leemos el superbloque
     struct superbloque SB;
-    bread(posSB, &SB);
-    // NUMERO DE BITS DEL MAPA DE BITS
-    int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totInodos);
-    // NUMERO DE BYTES DEL MAPA DE BITS
-    int bytesMB = (nbits / 8) % BLOCKSIZE;
-    // NUMERO DE BYTES SOBRANTES
-    int sobrante = nbits % 8;
-    // NUMERO DE BLOQUES QUE OBUPA EL MB
-    int nbloquesMB = (nbits / 8) / BLOCKSIZE;
-
-    // BUFFER DE TAMAÑO DE 1 BLOQUE
-    unsigned char bufferMB[BLOCKSIZE];
-    memset(bufferMB, '1', BLOCKSIZE);
-
-    // EN EL CASO DE QUE EL NUMERO DE BLOQUES QUE OCUPA EL MB LOS ESCRIBIRÁ
-    for (int i = SB.posPrimerBloqueMB; i < nbloquesMB + SB.posPrimerBloqueMB; i++)
+    if (bread(posSB, &SB) == EXIT_FAILURE)
     {
-        bwrite(i, bufferMB);
+        return EXIT_FAILURE;
     }
 
-    // RELLENA EL BUFFER CON LOS 1s DESEADOS
-    for (int i = 0; i < bytesMB; i++)
+    // Tamaño MB
+    int tamMB = SB.posUltimoBloqueMB - SB.posPrimerBloqueMB;
+    // Inicializa bloque a bloque el Mapa de bits
+    for (int i = SB.posPrimerBloqueMB; i <= tamMB + SB.posPrimerBloqueMB; i++)
     {
-        bufferMB[i] = 255;
+        if (bwrite(i, buffer) == EXIT_FAILURE)
+        {
+            return EXIT_FAILURE;
+        }
     }
 
-    // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
-    int decimal_sobrante = 0;
-    int pot = 7;
-    for (int i = 0; i < sobrante; i++)
+    // Ponemos a 1 en el MB los bits que corresponden a los bloques que ocupa el
+    // superbloque, el propio MB, y el array de inodos.
+    for (unsigned int i = posSB; i < SB.posPrimerBloqueDatos; i++)
     {
-        decimal_sobrante += potencia(2, pot);
-        pot--;
-    }
-    bufferMB[bytesMB + 1] = decimal_sobrante;
-
-    // ESCRIBE EL RESTO DE BYTES A 0
-    for (int i = bytesMB + 2; i < BLOCKSIZE; i++)
-    {
-        bufferMB[i] = 0;
+        // Podriamos reservar todos los bloques de los metadatos:
+        reservar_bloque();
     }
 
-    // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
-    bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
-    SB.cantBloquesLibres -= nbloquesMB;
-    return EXITO;
+    return EXIT_SUCCESS;
 }
 
 int initAI()
@@ -155,6 +200,7 @@ int initAI()
         }
         bwrite(i, inodos);
     }
+    bwrite(posSB, &SB);
     return EXITO;
 }
 
@@ -174,7 +220,7 @@ int escribir_bit(unsigned int nbloque, unsigned int bit)
     int nbloqueabs = SB.posPrimerBloqueMB + nbloqueMB;
     // BUFFER PARA LEER EL BLOQUE A MODIFICAR
     unsigned char bufferMB[BLOCKSIZE];
-    bread(nbloqueabs, &bufferMB);
+    bread(nbloqueabs, bufferMB);
 
     // POSICIÓN DEL BYTE A MODIFICAR DENTRO DEL BLOQUE
     posbyte = posbyte % BLOCKSIZE;
@@ -190,7 +236,7 @@ int escribir_bit(unsigned int nbloque, unsigned int bit)
     {
         bufferMB[posbyte] &= ~mascara;
     }
-    if (FALLO == bwrite(nbloqueabs, bufferMB))
+    if (bwrite(nbloqueabs, bufferMB) == FALLO)
     {
         return FALLO;
     }
@@ -202,7 +248,7 @@ char leer_bit(unsigned int nbloque)
 {
     // LECTURA DEL SUPERBLOQUE
     struct superbloque SB;
-    bread(nbloque, &SB);
+    bread(posSB, &SB);
     // POSICION DEL BYTE QUE CONTIENE EL BIT EN EL MAPA DE BITS
     int posbyte = nbloque / 8;
     // POSICION DENTRO DEL BYTE DEL BIT A MODIFICAR
@@ -221,6 +267,11 @@ char leer_bit(unsigned int nbloque)
     mascara >>= posbit;           // DESPLAZAMIENTO DE BITS A LA DERECHA
     mascara &= bufferMB[posbyte]; // OPERADOR AND
     mascara >>= (7 - posbit);     // DESPLAZAMINETO DE BITS A LA DERECHA Y GUARDAR EL REASULTADO DEL BIT
+
+#if DEBUG3
+    printf("[leer_bit(%i) → posbyte:%i, posbit:%i, nbloqueMB:%i, nbloqueabs:%i)]\n", nbloque, posbyte, posbit, nbloqueMB, nbloqueabs);
+#endif
+
     // DEVOLUCION DEL BIT LEIDO
     return mascara;
 }
@@ -277,9 +328,9 @@ int reservar_bloque()
     nbloque = ((nbloqueabs - SB.posPrimerBloqueMB) * BLOCKSIZE + posbyte) * 8 + posbit;
     escribir_bit(nbloque, 1);
     SB.cantBloquesLibres--;
-    bwrite(posSB, &SB);
     memset(bufferAux, 0, BLOCKSIZE); // Volvmemos a inicializar a 0
-    bwrite(nbloque, bufferAux);
+    bwrite(SB.posPrimerBloqueDatos + nbloque - 1, bufferAux);
+    bwrite(posSB, &SB);
 
     return nbloque; // NUMERO DE BLOQUE RESERVADO ((== PRIMER BLOQUE LIBRE)
 }
@@ -297,6 +348,7 @@ int liberar_bloque(unsigned int nbloque)
 
     return nbloque;
 }
+
 int escribir_inodo(unsigned int ninodo, struct inodo *inodo)
 {
     // LEEMOS EL SUPERBLOQUE PARA OBTENER LA INFORMACIÓN DEL SISTEMA
@@ -326,7 +378,7 @@ int leer_inodo(unsigned int ninodo, struct inodo *inodo)
     // BLOQUE ABSOLUTO EN EL QUE SE ENCUENTRA
     int nbloqueabs = SB.posPrimerBloqueAI + nbloque;
     int err = bread(nbloqueabs, &inodos);
-    inodo = &inodos[ninodo % (BLOCKSIZE / INODOSIZE)];
+    *inodo = inodos[ninodo % (BLOCKSIZE / INODOSIZE)];
 
     if (err == FALLO)
     {
@@ -338,17 +390,14 @@ int leer_inodo(unsigned int ninodo, struct inodo *inodo)
 int reservar_inodo(unsigned char tipo, unsigned char permisos)
 {
     struct superbloque SB;
-    struct inodo inodo;
-
     bread(posSB, &SB);
     if (SB.cantInodosLibres <= 0)
     {
         return FALLO;
     }
     int posInodoReservado = SB.posPrimerInodoLibre;
-    leer_inodo(posInodoReservado, &inodo);
-    SB.posPrimerInodoLibre = inodo.punterosDirectos[0]; // Actualizamos la lista enlazada de inodos libres
-
+    SB.posPrimerInodoLibre++;
+    struct inodo inodo;
     inodo.tipo = tipo;
     inodo.permisos = permisos;
     inodo.nlinks = 1;
@@ -359,14 +408,14 @@ int reservar_inodo(unsigned char tipo, unsigned char permisos)
     inodo.numBloquesOcupados = 0;
     for (int i = 0; i < 12; i++)
     {
+        for (int j = 0; j < 3; j++)
+        {
+            inodo.punterosIndirectos[j] = 0;
+        }
         inodo.punterosDirectos[i] = 0;
     }
-    for (int i = 0; i < 3; i++)
-    {
-        inodo.punterosIndirectos[i] = 0;
-    }
 
-    escribir_inodo(posInodoReservado, &inodo);
+    escribir_inodo(posInodoReservado, &inodo); // ns si es con & o sin
     SB.cantInodosLibres--;
     bwrite(posSB, &SB);
     return posInodoReservado;
