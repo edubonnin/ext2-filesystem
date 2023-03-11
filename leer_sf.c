@@ -1,10 +1,10 @@
 #include "ficheros_basico.h"
 
-#define DEBUG1 1 // Debugger del nivel 1: SUPERBLOQUE
-#define DEBUG2 0 // Debugger del nivel 2
-#define DEBUG3 1 // Debugger del nivel 3
-#define DEBUG4 0 // Debugger del nivel 4
-#define DEBUG7 0 // Debugger del nivel 7
+#define DEBUGN1 1 // Debugger del nivel 1: SUPERBLOQUE
+#define DEBUGN2 0 // Debugger del nivel 2
+#define DEBUGN3 0 // Debugger del nivel 3
+#define DEBUGN4 1 // Debugger del nivel 4
+#define DEBUGN7 0 // Debugger del nivel 7
 
 // Funciones
 void mostrar_buscar_entrada(char *camino, char reservar);
@@ -34,7 +34,7 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-#if DEBUG1
+#if DEBUGN1
     // Contenido del superbloque.
     printf("\nDATOS DEL SUPERBLOQUE\n");
     printf("posPrimerBloqueMB = %d\n", SB.posPrimerBloqueMB);
@@ -51,7 +51,7 @@ int main(int argc, char const *argv[])
     printf("totInodos = %d\n", SB.totInodos);
 #endif
 
-#if DEBUG2
+#if DEBUGN2
     printf("\nsizeof struct superbloque: %ld\n", sizeof(struct superbloque));
     printf("sizeof struct inodo:  %ld\n", sizeof(struct inodo));
     printf("\nRECORRIDO LISTA ENLAZADA DE INODOS LIBRES\n");
@@ -95,7 +95,7 @@ int main(int argc, char const *argv[])
     }
 #endif
 
-#if DEBUG3
+#if DEBUGN3
     printf("\nRESERVAMOS UN BLOQUE Y LUEGO LO LIBERAMOS:\n");
     int reservado = reservar_bloque(); // Actualiza el SB
     bread(posSB, &SB);                 // Actualizar los valores del SB
@@ -144,40 +144,43 @@ int main(int argc, char const *argv[])
     printf("numBloquesOcupados: %i\n", inodo.numBloquesOcupados);
 #endif
 
-#if DEBUG4
+#if DEBUGN4
     int inodoReservado = reservar_inodo('f', 6);
     bread(posSB, &SB);
 
+    // Inodo auxiliar para volcar el contenido del inodo reservado
+    struct inodo inodoAux;
+    leer_inodo(inodoReservado, &inodoAux); // Lectura del inodo reservado
+
     printf("\nINODO %d - TRADUCCION DE LOS BLOQUES LOGICOS 8, 204, 30.004, 400.004 y 468.750\n", inodoReservado);
-    traducir_bloque_inodo(inodoReservado, 8, 1);
-    traducir_bloque_inodo(inodoReservado, 204, 1);
-    traducir_bloque_inodo(inodoReservado, 30004, 1);
-    traducir_bloque_inodo(inodoReservado, 400004, 1);
-    traducir_bloque_inodo(inodoReservado, 468750, 1);
+    traducir_bloque_inodo(&inodoAux, 8, 1);
+    traducir_bloque_inodo(&inodoAux, 204, 1);
+    traducir_bloque_inodo(&inodoAux, 30004, 1);
+    traducir_bloque_inodo(&inodoAux, 400004, 1);
+    traducir_bloque_inodo(&inodoAux, 468750, 1);
 
     printf("\nDATOS DEL INODO RESERVADO: %d\n", inodoReservado);
     struct tm *ts;
     char atime[80];
     char mtime[80];
     char ctime[80];
-    struct inodo inodo;
-    leer_inodo(inodoReservado, &inodo); // Leemos el Inodo reservado
-    ts = localtime(&inodo.atime);
+
+    ts = localtime(&inodoAux.atime);
     strftime(atime, sizeof(atime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&inodo.mtime);
+    ts = localtime(&inodoAux.mtime);
     strftime(mtime, sizeof(mtime), "%a %Y-%m-%d %H:%M:%S", ts);
-    ts = localtime(&inodo.ctime);
+    ts = localtime(&inodoAux.ctime);
     strftime(ctime, sizeof(ctime), "%a %Y-%m-%d %H:%M:%S", ts);
-    printf("tipo: %c\n", inodo.tipo);
-    printf("permisos: %i\n", inodo.permisos);
+    printf("tipo: %c\n", inodoAux.tipo);
+    printf("permisos: %i\n", inodoAux.permisos);
     printf("ATIME: %s \nMTIME: %s \nCTIME: %s\n", atime, mtime, ctime);
-    printf("nlinks: %i\n", inodo.nlinks);
-    printf("tamaño en bytes lógicos: %i\n", inodo.tamEnBytesLog);
-    printf("Número de bloques ocupados: %i\n", inodo.numBloquesOcupados);
-    printf("SB.posPrimerInodoLibre = %d\n", SB.posPrimerInodoLibre);
+    printf("nlinks: %i\n", inodoAux.nlinks);
+    printf("tamaño en bytes lógicos: %i\n", inodoAux.tamEnBytesLog);
+    printf("Número de bloques ocupados: %i\n", inodoAux.numBloquesOcupados);
+    printf("\nSB.posPrimerInodoLibre = %d\n", SB.posPrimerInodoLibre);
 #endif
 
-#if DEBUG7
+#if DEBUGN7
     // Mostrar creación directorios y errores
     mostrar_buscar_entrada("pruebas/", 1);                 // ERROR_CAMINO_INCORRECTO
     mostrar_buscar_entrada("/pruebas/", 0);                // ERROR_NO_EXISTE_ENTRADA_CONSULTA

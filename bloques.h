@@ -7,13 +7,18 @@
 #include <unistd.h>   // SEEK_SET, read(), write(), open(), close(), lseek()
 #include <errno.h>    //errno
 #include <string.h>   // strerror()
-#include <limits.h>   // 
+#include <limits.h>   //
 #include <time.h>     //
 
 #define BLOCKSIZE 1024 // bytes
 
-#define EXITO 0  // para gestión errores
-#define FALLO -1 // para gestión errores
+// CÓDIGOS GESTIÓN DE ERRORES
+#define EXITO 0
+#define FALLO -1
+
+// COLORES
+#define GRIS_T "\x1b[94m"
+#define RESET "\033[0m"
 
 int bmount(const char *camino);
 int bumount();

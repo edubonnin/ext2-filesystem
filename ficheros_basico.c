@@ -1,6 +1,7 @@
 #include "ficheros_basico.h"
 
-#define DEBUG3 1
+#define DEBUGN3 1
+#define DEBUGN4 1
 
 // FUNCION AUXILIAR QUE HACE LA POTENCIA DE UN NUMERO
 int potencia(int a, int b)
@@ -268,8 +269,8 @@ char leer_bit(unsigned int nbloque)
     mascara &= bufferMB[posbyte]; // OPERADOR AND
     mascara >>= (7 - posbit);     // DESPLAZAMINETO DE BITS A LA DERECHA Y GUARDAR EL REASULTADO DEL BIT
 
-#if DEBUG3
-    printf("[leer_bit(%i) → posbyte:%i, posbit:%i, nbloqueMB:%i, nbloqueabs:%i)]\n", nbloque, posbyte, posbit, nbloqueMB, nbloqueabs);
+#if DEBUGN3
+    printf(GRIS_T "[leer_bit(%i) → posbyte:%i, posbit:%i, nbloqueMB:%i, nbloqueabs:%i)]\n" RESET, nbloque, posbyte, posbit, nbloqueMB, nbloqueabs);
 #endif
 
     // DEVOLUCION DEL BIT LEIDO
@@ -487,10 +488,16 @@ int obtener_indice(unsigned int nblogico, int nivel_punteros)
             return ((nblogico - INDIRECTOS1) % (NPUNTEROS * NPUNTEROS)) % NPUNTEROS;
         }
     }
+    return FALLO;
 }
 
 int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned char reservar)
 {
+
+#if DEBUGN4
+    printf("\n");
+#endif
+
     unsigned int ptr, ptr_ant;
     int nRangoBL, nivel_punteros, index;
     unsigned int buffer[NPUNTEROS];
@@ -522,13 +529,22 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
                 ptr = reservar_bloque();
                 inodo->numBloquesOcupados++;
                 inodo->ctime = time(NULL);
+
                 if (nivel_punteros == nRangoBL)
                 {
                     inodo->punterosIndirectos[nRangoBL - 1] = ptr;
+#if DEBUGN4
+                    printf(GRIS_T "[traducir_bloque_inodo()→ inodo.punterosIndirectos[%i] = %i (reservado BF %i para punteros_nivel%i)]\n" RESET,
+                           nRangoBL - 1, ptr, ptr, nivel_punteros);
+#endif
                 }
                 else
                 {
                     buffer[index] = ptr;
+#if DEBUGN4
+                    printf(GRIS_T "[traducir_bloque_inodo()→ inodo.punteros_nivel%i[%i] = %i (reservado BF %i para punteros_nivel%i)]\n" RESET,
+                           nivel_punteros, index, ptr, ptr, nivel_punteros);
+#endif
                     bwrite(ptr_ant, buffer);
                 }
                 memset(buffer, 0, BLOCKSIZE);
@@ -548,7 +564,7 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
     }
 
     // CUANDO EL NIVEL DE PUNTEROS ES DIRECTAMENTE LOS DATOS
-    // SI NO TENEMOS UN BLOQUE ASSIGNADO
+    // SI NO TENEMOS UN BLOQUE ASIGNADO
     if (ptr == 0)
     {
         // SI NO LO QUEREMOS RESERVAR DEVOLVEMOS -1
@@ -566,11 +582,19 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
             if (nRangoBL == 0)
             {
                 inodo->punterosDirectos[nblogico] = ptr;
+#if DEBUGN4
+                printf(GRIS_T "[traducir_bloque_inodo()→ inodo.punterosDirectos[%i] = %i (reservado BF %i para BL %i)]\n" RESET,
+                       nblogico, ptr, ptr, nblogico);
+#endif
                 // EN CASO CONTRARIO ASIGNAMOS EL PUNTERO A UN BLOQUE DE PUNTEROS
             }
             else
             {
                 buffer[index] = ptr;
+#if DEBUGN4
+                printf(GRIS_T "[traducir_bloque_inodo()→ inodo.punteros_nivel1[%i] = %i (reservado BF %i para BL %i)]\n" RESET,
+                       index, ptr, ptr, nblogico);
+#endif
                 bwrite(ptr_ant, buffer);
             }
         }
