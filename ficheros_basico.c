@@ -543,7 +543,7 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
                     buffer[index] = ptr;
 #if DEBUGN4
                     printf(GRIS_T "[traducir_bloque_inodo()→ inodo.punteros_nivel%i[%i] = %i (reservado BF %i para punteros_nivel%i)]\n" RESET,
-                           nivel_punteros, index, ptr, ptr, nivel_punteros);
+                           nivel_punteros + 1, index, ptr, ptr, nivel_punteros); // nivel_punteros+1 para hacer referencia al nivel de punteros anterior
 #endif
                     bwrite(ptr_ant, buffer);
                 }
