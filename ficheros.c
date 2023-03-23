@@ -209,7 +209,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
 int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsigned int nbytes)
 {
-    //Declaraciones
+    // Declaraciones
     unsigned int primerBL, ultimoBL;
     int desp1, desp2, nbfisico;
     int bytesleidos = 0;
@@ -217,14 +217,14 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     char unsigned buf_bloque[BLOCKSIZE];
     struct inodo inodo;
 
-    //Leer el inodo.
+    // Leer el inodo.
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
         fprintf(stderr, "Error in mi_read_f(): leer_inodo()\n");
         return bytesleidos;
     }
 
-    //Comprobamos que el inodo tenga los permisos para leer
+    // Comprobamos que el inodo tenga los permisos para leer
     if ((inodo.permisos & 4) != 4)
     {
         fprintf(stderr, "No hay permisos de lectura!\n\n");
@@ -243,21 +243,21 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         // leemos sólo los bytes que podemos desde el offset hasta EOF
     }
 
-    //Asignaciones de las variables.
+    // Asignaciones de las variables.
     primerBL = offset / BLOCKSIZE;
     ultimoBL = (offset + nbytes - 1) / BLOCKSIZE;
 
     desp1 = offset % BLOCKSIZE;
     desp2 = (offset + nbytes - 1) % BLOCKSIZE;
 
-    //Obtencion del numero de bloque fisico
+    // Obtencion del numero de bloque fisico
     nbfisico = traducir_bloque_inodo(&inodo, primerBL, '0');
-    //Caso el cual lo que queremos leer cabe en un bloque fisico
+    // Caso el cual lo que queremos leer cabe en un bloque fisico
     if (primerBL == ultimoBL)
     {
         if (nbfisico != -1)
         {
-            //Leemos el bloque fisico del disco
+            // Leemos el bloque fisico del disco
             auxByteLeidos = bread(nbfisico, buf_bloque);
             if (auxByteLeidos == FALLO)
             {
@@ -268,13 +268,13 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         }
         bytesleidos = nbytes;
     }
-    //Caso en el que la lectura ocupa mas de un bloque fisico
+    // Caso en el que la lectura ocupa mas de un bloque fisico
     else if (primerBL < ultimoBL)
     {
-        //Parte 1: Primero bloque leido parcialmente
+        // Parte 1: Primero bloque leido parcialmente
         if (nbfisico != -1)
         {
-            //Leemos el bloque fisico del disco
+            // Leemos el bloque fisico del disco
             auxByteLeidos = bread(nbfisico, buf_bloque);
             if (auxByteLeidos == FALLO)
             {
@@ -286,14 +286,14 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
 
         bytesleidos = BLOCKSIZE - desp1;
 
-        //Parte 2: Bloques intermedios
+        // Parte 2: Bloques intermedios
         for (int i = primerBL + 1; i < ultimoBL; i++)
         {
-            //Obtenemos los bloques intermedios
+            // Obtenemos los bloques intermedios
             nbfisico = traducir_bloque_inodo(&inodo, i, '0');
             if (nbfisico != -1)
             {
-                //Leemos el bloque fisico del disco
+                // Leemos el bloque fisico del disco
                 auxByteLeidos = bread(nbfisico, buf_bloque);
                 if (auxByteLeidos == FALLO)
                 {
@@ -305,43 +305,43 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
             bytesleidos += BLOCKSIZE;
         }
 
-        //Parte 3: Último bloque leido parcialmente
-        //Obtenemos el bloque fisico
+        // Parte 3: Último bloque leido parcialmente
+        // Obtenemos el bloque fisico
         nbfisico = traducir_bloque_inodo(&inodo, ultimoBL, '0');
-        //Parte 1: Primero bloque leido parcialmente
+        // Parte 1: Primero bloque leido parcialmente
         if (nbfisico != -1)
         {
-            //Leemos el bloque fisico del disco
+            // Leemos el bloque fisico del disco
             auxByteLeidos = bread(nbfisico, buf_bloque);
             if (auxByteLeidos == FALLO)
             {
                 fprintf(stderr, "Error mi_read_f(): bread()\n");
                 return FALLO;
             }
-            //Calculamos el byte lógico del último bloque hasta donde hemos de leer
+            // Calculamos el byte lógico del último bloque hasta donde hemos de leer
             memcpy(buf_original + (nbytes - desp2 - 1), buf_bloque, desp2 + 1);
         }
         bytesleidos += desp2 + 1;
     }
 
-    //Leer el inodo actualizado.
+    // Leer el inodo actualizado.
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
         fprintf(stderr, "Error leer_inodo(): mi_read_f()\n");
         return FALLO;
     }
 
-    //Actualizar la metainformación
+    // Actualizar la metainformación
     inodo.atime = time(NULL);
 
-    //Escribimos inodo
+    // Escribimos inodo
     if (escribir_inodo(ninodo, &inodo) == FALLO)
     {
         fprintf(stderr, "Error escribir_inodo(): mi_read_f()\n");
         return FALLO;
     }
 
-    //Comprobar que no haya errores de escritura y que se haya escrito todo bien.
+    // Comprobar que no haya errores de escritura y que se haya escrito todo bien.
     if (nbytes == bytesleidos)
     {
 #if DEBUGGER

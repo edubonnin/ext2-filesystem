@@ -76,60 +76,6 @@ int initSB(unsigned int nbloques, unsigned int ninodos)
     return EXITO;
 }
 
-// **** BORRRAR ***************************************************************
-// int initMB()
-// {
-//     struct superbloque SB;
-//     bread(posSB, &SB);
-//     // NUMERO DE BITS DEL MAPA DE BITS
-//     int nbits = tamSB + tamMB(SB.totBloques) + tamAI(SB.totInodos);
-//     // NUMERO DE BYTES DEL MAPA DE BITS
-//     int bytesMB = (nbits / 8) % BLOCKSIZE;
-//     // NUMERO DE BITS SOBRANTES
-//     int sobrante = nbits % 8;
-//     // NUMERO DE BLOQUES LLENOS DEL MAPA DE BITS
-//     int nbloquesMB = (nbits / 8) / BLOCKSIZE;
-
-//     // BUFFER DE TAMAÑO DE 1 BLOQUE
-//     unsigned char bufferMB[BLOCKSIZE];
-//     memset(bufferMB, '1', BLOCKSIZE);
-
-//     // EN EL CASO DE QUE EL NUMERO DE BLOQUES QUE OCUPA EL MB LOS ESCRIBIRÁ
-//     for (int i = SB.posPrimerBloqueMB; i < nbloquesMB + SB.posPrimerBloqueMB; i++)
-//     {
-//         bwrite(i, bufferMB);
-//     }
-
-//     // RELLENA EL BUFFER CON LOS 1s DESEADOS
-//     for (int i = 0; i < bytesMB; i++)
-//     {
-//         bufferMB[i] = 255;
-//     }
-
-//     // OBTIENE EL NUMERO A ESCRIBIR QUE REPRESENTA EL SOBRANTE
-//     int decimal_sobrante = 0;
-//     int pot = 7;
-//     for (int i = 0; i < sobrante; i++)
-//     {
-//         decimal_sobrante += potencia(2, pot);
-//         pot--;
-//     }
-//     bufferMB[bytesMB + 1] = decimal_sobrante;
-
-//     // ESCRIBE EL RESTO DE BYTES A 0
-//     for (int i = bytesMB + 2; i < BLOCKSIZE; i++)
-//     {
-//         bufferMB[i] = 0;
-//     }
-
-//     // ESCRIBE LOS BYTES QUE NO OCUPAN UN BLOQUE PER SE.
-//     bwrite(nbloquesMB + SB.posPrimerBloqueMB, bufferMB);
-//     SB.cantBloquesLibres -= tamMB(SB.totBloques);
-//     bwrite(posSB, &SB);
-//     return EXITO;
-// }
-// ****************************************************************************
-
 int initMB()
 {
     // Buffer
@@ -493,10 +439,10 @@ int obtener_indice(unsigned int nblogico, int nivel_punteros)
 
 int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned char reservar)
 {
-
-#if DEBUGN4
-    printf("\n");
-#endif
+    // Descomentar para saltos de línea entre los debugs de distintas llamadas a la función
+    // #if DEBUGN4
+    //     printf("\n");
+    // #endif
 
     unsigned int ptr, ptr_ant;
     int nRangoBL, nivel_punteros, index;
@@ -519,7 +465,7 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
         if (ptr == 0)
         {
             // SI NO TENEMOS QUE RESERVARLO DEVOLVEMOS -1
-            if (reservar == 0)
+            if (reservar == '0')
             {
                 return FALLO;
                 // EN CASO DE QUE SÍ, LO RESERVAMOS
@@ -568,7 +514,7 @@ int traducir_bloque_inodo(struct inodo *inodo, unsigned int nblogico, unsigned c
     if (ptr == 0)
     {
         // SI NO LO QUEREMOS RESERVAR DEVOLVEMOS -1
-        if (reservar == 0)
+        if (reservar == '0')
         {
             return FALLO;
             // SI LO QUEREMOS RESERVAR LO GESTIONAMOS

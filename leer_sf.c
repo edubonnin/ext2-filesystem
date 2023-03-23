@@ -153,11 +153,11 @@ int main(int argc, char const *argv[])
     leer_inodo(inodoReservado, &inodoAux); // Lectura del inodo reservado
 
     printf("\nINODO %d - TRADUCCION DE LOS BLOQUES LOGICOS 8, 204, 30.004, 400.004 y 468.750\n", inodoReservado);
-    traducir_bloque_inodo(&inodoAux, 8, 1);
-    traducir_bloque_inodo(&inodoAux, 204, 1);
-    traducir_bloque_inodo(&inodoAux, 30004, 1);
-    traducir_bloque_inodo(&inodoAux, 400004, 1);
-    traducir_bloque_inodo(&inodoAux, 468750, 1);
+    traducir_bloque_inodo(&inodoAux, 8, '1');
+    traducir_bloque_inodo(&inodoAux, 204, '1');
+    traducir_bloque_inodo(&inodoAux, 30004, '1');
+    traducir_bloque_inodo(&inodoAux, 400004, '1');
+    traducir_bloque_inodo(&inodoAux, 468750, '1');
 
     printf("\nDATOS DEL INODO RESERVADO: %d\n", inodoReservado);
     struct tm *ts;

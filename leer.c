@@ -82,7 +82,7 @@ int main(int argc, char const *argv[])
     }
 
 #if DEBUG
-    fprintf(stderr, "total_bytesleidos: %d\ntamEnBytesLog: %d\n", bytesleidos, inodo.tamEnBytesLog);
+    fprintf(stderr, "\ntotal_bytesleidos: %d\ntamEnBytesLog: %d\n", bytesleidos, inodo.tamEnBytesLog);
 #endif
 
     // Desmonta el dispositivo virtual
