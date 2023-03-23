@@ -4,6 +4,11 @@ PROGRAMA *** escribir.c ***
                               1 --> diferentes inodos (reservar inodo cada vez que se quiere cambiar de offset)
 */
 
+#include "ficheros.h"
+
+#define DEBUG 1     // Debugger a enseñar tamaños logicos & bloques ocupados
+#define DEBUGREAD 0 // Debugger que lee al escribir
+
 /**
  * ---------------------------------------------------------------------
  *                          escribir.c:
@@ -32,12 +37,6 @@ PROGRAMA *** escribir.c ***
  *
  * 4- Pasar como argumento el nombre de un fichero externo que contenga el texto
  */
-
-#include <stdlib.h>
-#include "ficheros.h"
-
-#define DEBUG 1     // Debugger a enseñar tamaños logicos & bloques ocupados
-#define DEBUGREAD 0 // Debugger que lee al escribir
 
 int main(int argc, char *argv[])
 {
@@ -78,7 +77,7 @@ int main(int argc, char *argv[])
             fprintf(stderr, "escribir.c: Error mi_write_f().\n");
             return FALLO;
         }
-        printf("Bytes escritos: %d\n\n", bytesescritos);
+        printf("Bytes escritos: %d\n", bytesescritos);
 
 #if DEBUGREAD
         int longitud = strlen(argv[2]);

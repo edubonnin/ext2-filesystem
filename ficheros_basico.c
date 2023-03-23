@@ -359,7 +359,7 @@ int escribir_inodo(unsigned int ninodo, struct inodo *inodo)
     struct inodo inodos[BLOCKSIZE / INODOSIZE];
     bread(numerobloque, inodos);
     inodos[ninodo % (BLOCKSIZE / INODOSIZE)] = *inodo; // posible error
-    if (bwrite(numerobloque, inodos))
+    if (bwrite(numerobloque, inodos) == FALLO)
     {
         return FALLO;
     }

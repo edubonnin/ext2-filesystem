@@ -3,6 +3,11 @@ PROGRAMA *** leer.c ***
 ./leer
 */
 
+#include "ficheros.h"
+
+#define tambuffer 1500
+#define DEBUG 1
+
 /**
  * ---------------------------------------------------------------------
  *                          leer.c:
@@ -17,12 +22,6 @@ PROGRAMA *** leer.c ***
  * cat de Linux, explorando TODO el fichero.
  *
  */
-
-#include <stdlib.h>
-#include "ficheros.h"
-
-#define tambuffer 1500
-#define DEBUG 1
 
 int main(int argc, char const *argv[])
 {
@@ -39,7 +38,7 @@ int main(int argc, char const *argv[])
     if (argc != 3)
     {
         fprintf(stderr, "Sintaxis: leer <nombre_dispositivo><numero_inodo>\n");
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Inicializacion del buffer a 0.
@@ -49,14 +48,14 @@ int main(int argc, char const *argv[])
     if (bmount(argv[1]) == -1)
     {
         fprintf(stderr, "leer.c: Error al montar el dispositivo.\n");
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Leer superbloque
-    if (bread(0, &SB) == EXIT_FAILURE)
+    if (bread(0, &SB) == FALLO)
     {
         fprintf(stderr, "leer.c: Error de lectura del superbloque.\n");
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Lee del fichero hasta llenar el buffer o fin de fichero.
@@ -79,7 +78,7 @@ int main(int argc, char const *argv[])
     if (leer_inodo(ninodo, &inodo))
     {
         fprintf(stderr, "Error con la lectura del inodo.\n");
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
 #if DEBUG
@@ -87,10 +86,10 @@ int main(int argc, char const *argv[])
 #endif
 
     // Desmonta el dispositivo virtual
-    if (bumount() < 0)
+    if (bumount() == FALLO)
     {
         fprintf(stderr, "leer.c: Error al desmonta el dispositivo virtual.\n");
-        return EXIT_FAILURE;
+        return FALLO;
     }
-    return EXIT_SUCCESS;
+    return EXITO;
 }

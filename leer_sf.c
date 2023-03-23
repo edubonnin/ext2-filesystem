@@ -3,7 +3,7 @@
 #define DEBUGN1 1 // Debugger del nivel 1: SUPERBLOQUE
 #define DEBUGN2 0 // Debugger del nivel 2
 #define DEBUGN3 0 // Debugger del nivel 3
-#define DEBUGN4 1 // Debugger del nivel 4
+#define DEBUGN4 0 // Debugger del nivel 4
 #define DEBUGN7 0 // Debugger del nivel 7
 
 // Funciones
