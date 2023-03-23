@@ -3,7 +3,7 @@
 #define DEBUGN1 1 // Debugger del nivel 1: SUPERBLOQUE
 #define DEBUGN2 0 // Debugger del nivel 2
 #define DEBUGN3 0 // Debugger del nivel 3
-#define DEBUGN4 1 // Debugger del nivel 4
+#define DEBUGN4 0 // Debugger del nivel 4
 #define DEBUGN7 0 // Debugger del nivel 7
 
 // Funciones
@@ -153,11 +153,11 @@ int main(int argc, char const *argv[])
     leer_inodo(inodoReservado, &inodoAux); // Lectura del inodo reservado
 
     printf("\nINODO %d - TRADUCCION DE LOS BLOQUES LOGICOS 8, 204, 30.004, 400.004 y 468.750\n", inodoReservado);
-    traducir_bloque_inodo(&inodoAux, 8, 1);
-    traducir_bloque_inodo(&inodoAux, 204, 1);
-    traducir_bloque_inodo(&inodoAux, 30004, 1);
-    traducir_bloque_inodo(&inodoAux, 400004, 1);
-    traducir_bloque_inodo(&inodoAux, 468750, 1);
+    traducir_bloque_inodo(&inodoAux, 8, '1');
+    traducir_bloque_inodo(&inodoAux, 204, '1');
+    traducir_bloque_inodo(&inodoAux, 30004, '1');
+    traducir_bloque_inodo(&inodoAux, 400004, '1');
+    traducir_bloque_inodo(&inodoAux, 468750, '1');
 
     printf("\nDATOS DEL INODO RESERVADO: %d\n", inodoReservado);
     struct tm *ts;

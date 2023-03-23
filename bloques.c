@@ -11,6 +11,7 @@ int bmount(const char *camino)
     if (descriptor == FALLO)
     {
         perror("ERROR: ");
+        return FALLO;
     }
     return descriptor;
 }
@@ -22,6 +23,7 @@ int bumount()
     if (err == FALLO)
     {
         perror("ERROR: ");
+        return FALLO;
     }
     return err;
 }
@@ -35,6 +37,7 @@ int bwrite(unsigned int nbloque, const void *buf)
     if (wtd == FALLO)
     {
         perror("ERROR: ");
+        return FALLO;
     }
     return wtd;
 }
@@ -48,6 +51,7 @@ int bread(unsigned int nbloque, void *buf)
     if (rdd == FALLO)
     {
         perror("ERROR: ");
+        return FALLO;
     }
     return rdd;
 }
