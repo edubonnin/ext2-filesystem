@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "enabled",
     "cmake.configureOnOpen": true,
     "files.associations": {
-        "errno.h": "c"
+        "errno.h": "c",
+        "ficheros.h": "c"
     }
 }
