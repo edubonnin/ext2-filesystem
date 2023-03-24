@@ -554,26 +554,26 @@ int liberar_inodo(unsigned int ninodo)
     int liberados;
 
     struct inodo inodo;
-    leer_inodo(ninodo,&inodo);
+    leer_inodo(ninodo, &inodo);
 
     struct superbloque SB;
-    bread(posSB,&SB);
+    bread(posSB, &SB);
 
-    liberados=liberar_bloques_inodo(0,&inodo);
+    liberados = liberar_bloques_inodo(0, &inodo);
 
-    inodo.numBloquesOcupados-=liberados;
-    inodo.tipo='l';
-    inodo.tamEnBytesLog=0;
+    inodo.numBloquesOcupados -= liberados;
+    inodo.tipo = 'l';
+    inodo.tamEnBytesLog = 0;
 
     // ACTUALIZACIÓN LISTA ENLAZADA INODOS LIBRES
-    inodo.punterosDirectos[0]=SB.posPrimerInodoLibre;
-    SB.posPrimerInodoLibre=ninodo;
+    inodo.punterosDirectos[0] = SB.posPrimerInodoLibre;
+    SB.posPrimerInodoLibre = ninodo;
     SB.cantInodosLibres++;
 
-    bwrite(posSB,&SB);
+    bwrite(posSB, &SB);
 
-    inodo.ctime=time(NULL);
-    escribir_inodo(ninodo,&inodo);
+    inodo.ctime = time(NULL);
+    escribir_inodo(ninodo, &inodo);
     return ninodo;
 }
 
@@ -586,7 +586,7 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
     unsigned char bufAux_punteros[BLOCKSIZE];
     int ptr_nivel[3];
     int indices[3];
-    int liberados=0;
+    int liberados = 0;
 
     if (inodo->tamEnBytesLog == 0)
     {
@@ -645,14 +645,12 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
                     {
                         liberar_bloque(ptr);
                         liberados++;
-                        //mejora 
-                        
-                        
-                        
-                        //fin mejora
-                        if (nivel_punteros==nRangoBL)
+                        // mejora
+
+                        // fin mejora
+                        if (nivel_punteros == nRangoBL)
                         {
-                            inodo->punterosIndirectos[nRangoBL-1]=0;
+                            inodo->punterosIndirectos[nRangoBL - 1] = 0;
                         }
                         nivel_punteros++;
                     }
@@ -666,9 +664,9 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
         }
         else
         {
-            // mejora saltando los bloques que no sea necesario explorar  al valer 0 un puntero 
+            // mejora saltando los bloques que no sea necesario explorar  al valer 0 un puntero
         }
     }
-    
+
     return liberados;
 }
