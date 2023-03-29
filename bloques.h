@@ -17,7 +17,8 @@
 #define FALLO -1
 
 // COLORES
-#define GRIS "\x1b[90m"
+#define AZUL "\033[94m"
+#define GRIS "\033[90m"
 #define ROJO "\x1b[91m"
 #define RESET "\033[0m"
 

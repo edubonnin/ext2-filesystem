@@ -1,4 +1,4 @@
-// bloques.c //
+// bloques.c
 
 #include "bloques.h"
 
