@@ -1,7 +1,7 @@
 #include "ficheros_basico.h"
 
-#define DEBUGN3 1
-#define DEBUGN4 1
+#define DEBUGN3 0
+#define DEBUGN4 0
 #define DEBUGN6 1
 
 // CALCULA EL TAMAÑO EN BLOQUES DEL MAPA DE BITS

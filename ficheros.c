@@ -1,5 +1,7 @@
 #include "ficheros.h"
 
+#define DEBUG 0
+
 /**
  * mi_write_f()
  * DESCRIPCION:
@@ -203,14 +205,14 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     // Comprobar que no haya errores de escritura
     if (nbytes == bytesleidos)
     {
-#if DEBUGGER
+#if DEBUG
         printf("\tmi_read_f: BIEN\n");
 #endif
         return bytesleidos;
     }
     else
     {
-#if DEBUGGER
+#if DEBUG
         printf("mi_read_f(): MAL\n\tnbytes:%i\n\tbytesleidos:%i\n", nbytes, bytesleidos);
 #endif
         return FALLO;
