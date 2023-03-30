@@ -1,7 +1,7 @@
 #include "ficheros_basico.h"
 
 #define DEBUGN3 0
-#define DEBUGN4 0
+#define DEBUGN4 1 // DEBUGGER DE traducir_bloque_inodo()
 #define DEBUGN6 1
 
 // CALCULA EL TAMAÑO EN BLOQUES DEL MAPA DE BITS
@@ -74,14 +74,14 @@ int initMB()
     // Todas posiciones a 0.
     if (memset(buffer, 0, BLOCKSIZE) == NULL)
     {
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Leemos el superbloque
     struct superbloque SB;
-    if (bread(posSB, &SB) == EXIT_FAILURE)
+    if (bread(posSB, &SB) == FALLO)
     {
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Tamaño MB
@@ -89,9 +89,9 @@ int initMB()
     // Inicializa bloque a bloque el Mapa de bits
     for (int i = SB.posPrimerBloqueMB; i <= tamMB + SB.posPrimerBloqueMB; i++)
     {
-        if (bwrite(i, buffer) == EXIT_FAILURE)
+        if (bwrite(i, buffer) == FALLO)
         {
-            return EXIT_FAILURE;
+            return FALLO;
         }
     }
 
@@ -546,13 +546,13 @@ int liberar_inodo(unsigned int ninodo)
     struct inodo inodo;
     leer_inodo(ninodo, &inodo);
 
-    struct superbloque SB;
-    bread(posSB, &SB);
-
     liberados = liberar_bloques_inodo(0, &inodo);
     inodo.numBloquesOcupados -= liberados;
     inodo.tipo = 'l';
     inodo.tamEnBytesLog = 0;
+
+    struct superbloque SB;
+    bread(posSB, &SB);
 
     // ACTUALIZACIÓN LISTA ENLAZADA INODOS LIBRES
     inodo.punterosDirectos[0] = SB.posPrimerInodoLibre;
@@ -562,7 +562,9 @@ int liberar_inodo(unsigned int ninodo)
     bwrite(posSB, &SB);
 
     inodo.ctime = time(NULL);
+
     escribir_inodo(ninodo, &inodo);
+
     return ninodo;
 }
 
@@ -574,7 +576,7 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
     unsigned char bufAux_punteros[BLOCKSIZE];
     int ptr_nivel[3];
     int indices[3];
-    int liberados = 0;
+    int liberados = 0, breads = 0, bwrites = 0;
 
     if (inodo->tamEnBytesLog == 0)
     {
@@ -610,6 +612,7 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
             if (indice == 0 || nBL == primerBL)
             {
                 bread(ptr, bloques_punteros[nivel_punteros - 1]);
+                breads++;
             }
             ptr_nivel[nivel_punteros - 1] = ptr;
             indices[nivel_punteros - 1] = indice;
@@ -659,6 +662,7 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
                     else
                     {
                         bwrite(ptr, bloques_punteros[nivel_punteros - 1]);
+                        bwrites++;
                         nivel_punteros = nRangoBL + 1;
                     }
                 }
@@ -671,7 +675,7 @@ int liberar_bloques_inodo(unsigned int primerBL, struct inodo *inodo)
     }
 
 #if DEBUGN6
-    fprintf(stderr, AZUL "[liberar_bloques_inodo()-> total bloques liberados: %d]\n" RESET, liberados);
+    fprintf(stderr, AZUL "[liberar_bloques_inodo()-> total bloques liberados: %d, total_breads: %d, total_bwrites: %d]\n" RESET, liberados, breads, bwrites);
 #endif
 
     return liberados;

@@ -1,14 +1,9 @@
 #include "ficheros.h"
 
 /**
- * ---------------------------------------------------------------------
- *                          truncar.c:
- * ---------------------------------------------------------------------
- *
- * Programa externo ficticio sólo para probar, temporalmente,
- * la funcionalidad d borrado parcial o total del contenido de un archivo
- * del dispositivo virtual.
- *
+ * *** TRUNCAR.C ***
+ * Programa externo ficticio sólo para probar el borrado parcial o total del
+ * contenido de un archivo del dispositivo virtual.
  */
 
 int main(int argc, char *argv[])
