@@ -1,4 +1,4 @@
-// bloques.h ->
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
 #include <stdio.h>    //printf(), fprintf(), stderr, stdout, stdin
 #include <fcntl.h>    //O_WRONLY, O_CREAT, O_TRUNC

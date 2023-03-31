@@ -1,41 +1,38 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 #include "ficheros_basico.h"
 
-#define DEBUGN1 1 // Debugger del nivel 1: SUPERBLOQUE
-#define DEBUGN2 0 // Debugger del nivel 2
-#define DEBUGN3 0 // Debugger del nivel 3
-#define DEBUGN4 0 // Debugger del nivel 4
-#define DEBUGN7 0 // Debugger del nivel 7
+#define DEBUGN1 1 // DEBUGGER QUE MUESTRA EL CONTENIDO DEL SUPERBLOQUE
+#define DEBUGN2 0
+#define DEBUGN3 0
+#define DEBUGN4 0
+#define DEBUGN7 0
 
-// Funciones
 void mostrar_buscar_entrada(char *camino, char reservar);
 
-// La ejecución de leer_sf.c permite mostrar el contenido del superbloque.
 int main(int argc, char const *argv[])
 {
-    // Comprobación de sintaxis correcta
+    // VALIDACIÓN SINTAXIS
     if (argc != 2)
     {
         fprintf(stderr, "Error sintaxis: ./leer_sf <nombre_dispositivo>\n");
         return FALLO;
     }
 
-    // Montaje del disco
+    // MONTAMOS DISPOSITIVO VIRTUAL
     if (bmount(argv[1]) == FALLO)
     {
         fprintf(stderr, "Error al montar el dispositivo virtual.\n");
         return FALLO;
     }
 
-    // Leectura del superbloque del disco
     struct superbloque SB;
-    if (bread(0, &SB) == FALLO)
+    if (bread(0, &SB) == FALLO) // LECTURA DEL SUPERBLOQUE (SB)
     {
         fprintf(stderr, "Error de lectura del superbloque.\n");
         return FALLO;
     }
 
 #if DEBUGN1
-    // Contenido del superbloque.
     printf("\nDATOS DEL SUPERBLOQUE\n");
     printf("posPrimerBloqueMB = %d\n", SB.posPrimerBloqueMB);
     printf("posUltimoBloqueMB = %d\n", SB.posUltimoBloqueMB);
@@ -48,20 +45,18 @@ int main(int argc, char const *argv[])
     printf("cantBloquesLibres = %d\n", SB.cantBloquesLibres);
     printf("cantInodosLibres = %d\n", SB.cantInodosLibres);
     printf("totBloques = %d\n", SB.totBloques);
-    printf("totInodos = %d\n", SB.totInodos);
+    printf("totInodos = %d\n\n", SB.totInodos);
 #endif
 
 #if DEBUGN2
     printf("\nsizeof struct superbloque: %ld\n", sizeof(struct superbloque));
     printf("sizeof struct inodo:  %ld\n", sizeof(struct inodo));
     printf("\nRECORRIDO LISTA ENLAZADA DE INODOS LIBRES\n");
-    // Podéis hacer también un recorrido de la lista de inodos libres (mostrando para cada inodo el campo punterosDirectos[0]).
     struct inodo inodos[BLOCKSIZE / INODOSIZE];
     int contlibres = 0;
 
     for (int i = SB.posPrimerBloqueAI; i <= SB.posUltimoBloqueAI; i++)
     {
-        //&inodos
         if (bread(i, inodos) == FALLO)
         {
             return FALLO;
@@ -97,13 +92,13 @@ int main(int argc, char const *argv[])
 
 #if DEBUGN3
     printf("\nRESERVAMOS UN BLOQUE Y LUEGO LO LIBERAMOS:\n");
-    int reservado = reservar_bloque(); // Actualiza el SB
-    bread(posSB, &SB);                 // Actualizar los valores del SB
+    int reservado = reservar_bloque();
+    bread(posSB, &SB); 
 
     printf("Se ha reservado el bloque físico nº %i que era el 1º libre indicado por el MB.\n", reservado);
     printf("SB.cantBloquesLibres: %i\n", SB.cantBloquesLibres);
     liberar_bloque(reservado);
-    bread(posSB, &SB); // Actualizar los valores del SB
+    bread(posSB, &SB);
 
     printf("Liberamos ese bloque, y después SB.cantBloquesLibres: %i\n\n", SB.cantBloquesLibres);
     printf("MAPA DE BITS CON BLOQUES DE METADATOS OCUPADOS\n");
@@ -128,7 +123,7 @@ int main(int argc, char const *argv[])
     char mtime[80];
     char ctime[80];
     struct inodo inodo;
-    int ninodo = 0; // el directorio raiz es el inodo 0
+    int ninodo = 0; // DIRECTORIO RAÍZ
     leer_inodo(ninodo, &inodo);
     ts = localtime(&inodo.atime);
     strftime(atime, sizeof(atime), "%a %Y-%m-%d %H:%M:%S", ts);
@@ -148,9 +143,9 @@ int main(int argc, char const *argv[])
     int inodoReservado = reservar_inodo('f', 6);
     bread(posSB, &SB);
 
-    // Inodo auxiliar para volcar el contenido del inodo reservado
+    // INODO AUXILIAR PARA VOLCAR EL CONTENIDO DEL INODO RESERVADO
     struct inodo inodoAux;
-    leer_inodo(inodoReservado, &inodoAux); // Lectura del inodo reservado
+    leer_inodo(inodoReservado, &inodoAux); // LECTURA DEL INODO RESERVADO
 
     printf("\nINODO %d - TRADUCCION DE LOS BLOQUES LOGICOS 8, 204, 30.004, 400.004 y 468.750\n", inodoReservado);
     traducir_bloque_inodo(&inodoAux, 8, '1');
@@ -196,7 +191,7 @@ int main(int argc, char const *argv[])
     mostrar_buscar_entrada("/pruebas/docs/doc2", 1);       // creamos /pruebas/docs/doc2
 #endif
 
-    // Liberación
+    // LIBERACIÓN
     if (bumount() == FALLO)
     {
         fprintf(stderr, "Error al desmontar el dispositivo virtual.\n");

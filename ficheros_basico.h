@@ -1,3 +1,5 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
+
 #include "bloques.h"
 
 #define posSB 0 // el superbloque se escribe en el primer bloque de nuestro FS
