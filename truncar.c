@@ -1,10 +1,6 @@
-#include "ficheros.h"
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
-/**
- * *** TRUNCAR.C ***
- * Programa externo ficticio sólo para probar el borrado parcial o total del
- * contenido de un archivo del dispositivo virtual.
- */
+#include "ficheros.h"
 
 int main(int argc, char *argv[])
 {
@@ -68,9 +64,9 @@ int main(int argc, char *argv[])
     printf("atime: %s\n", atime);
     printf("ctime: %s\n", ctime);
     printf("mtime: %s\n", mtime);
-    printf("nLinks= %d\n", p_stat.nlinks);
-    printf("tamEnBytesLog= %d\n", p_stat.tamEnBytesLog);
-    printf("numBloquesOcupados= %d\n", p_stat.numBloquesOcupados);
+    printf("nlinks=%d\n", p_stat.nlinks);
+    printf("tamEnBytesLog=%d\n", p_stat.tamEnBytesLog);
+    printf("numBloquesOcupados=%d\n", p_stat.numBloquesOcupados);
 
     // DESMONTAMOS EL DISPOSITIVO VITRUAL
     if (bumount() == FALLO)

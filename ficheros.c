@@ -1,13 +1,9 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
+
 #include "ficheros.h"
 
 #define DEBUG 0
 
-/**
- * mi_write_f()
- * DESCRIPCION:
- * INPUTS:
- * OUTPUTS:
- */
 int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offset, unsigned int nbytes)
 {
     struct inodo inodo;
@@ -34,36 +30,56 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
     if (primerBL == ultimoBL) // CASO EN EL QUE TODOS LOS BYTES QUEPAN EN UN BLOQUE
     {
-        bread(nbfisico, buf_bloque);                      // leemos el bloque físico
+        if (bread(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        }                                                 // leemos el bloque físico
         memcpy(buf_bloque + desp1, buf_original, nbytes); // copiamos el buffer original en buf_bloque
-        bwrite(nbfisico, buf_bloque);                     // escribimos el bloque físico
+        if (bwrite(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        } // escribimos el bloque físico
         bytesEscritos += nbytes;
     }
     else // SE TIENE QUE ESCRIBIR MÁS DE UN BLOQUE
     {
         // 1. PRIMER BLOQUE LÓGICO
-        bread(nbfisico, buf_bloque);
+        if (bread(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        }
         memcpy(buf_bloque + desp1, buf_original, BLOCKSIZE - desp1);
-        bwrite(nbfisico, buf_bloque);
+        if (bwrite(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        }
         bytesEscritos += (BLOCKSIZE - desp1);
 
         // 2. BLOQUES LÓGICOS INTERMEDIOS
         for (int i = primerBL + 1; i < ultimoBL; i++)
         {
             nbfisico = traducir_bloque_inodo(&inodo, i, '1');
-            bwrite(nbfisico, buf_original + (BLOCKSIZE - desp1) + (i - primerBL - 1) * BLOCKSIZE);
+            if (bwrite(nbfisico, buf_original + (BLOCKSIZE - desp1) + (i - primerBL - 1) * BLOCKSIZE) == FALLO)
+            {
+                return FALLO;
+            }
             bytesEscritos += BLOCKSIZE;
         }
 
         // 3. ÚLTIMO BLOQUE
         nbfisico = traducir_bloque_inodo(&inodo, ultimoBL, '1');
-        bread(nbfisico, buf_bloque);
+        if (bread(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        }
         memcpy(buf_bloque, buf_original + (nbytes - (desp2 + 1)), desp2 + 1);
-        bwrite(nbfisico, buf_bloque);
+        if (bwrite(nbfisico, buf_bloque) == FALLO)
+        {
+            return FALLO;
+        }
         bytesEscritos += (desp2 + 1);
     }
 
-    // leer_inodo(ninodo,&inodo); ??????!!!!!!
     if ((offset + nbytes) > inodo.tamEnBytesLog)
     {
         inodo.tamEnBytesLog = offset + nbytes;
@@ -75,12 +91,6 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
     return bytesEscritos;
 }
 
-/**
- * mi_read_f()
- * DESCRIPCION:
- * INPUTS:
- * OUTPUTS:
- */
 int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsigned int nbytes)
 {
     // Declaraciones
@@ -102,6 +112,7 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     // COMPROBAMOS QUE TENEMOS PERMISOS PARA LEER
     if ((inodo.permisos & 4) != 4)
     {
+        fprintf(stderr, ROJO "No hay permisos de lectura\n" RESET);
         return bytesleidos;
     }
 
@@ -219,12 +230,6 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     }
 }
 
-/**
- * mi_stat_f()
- * DESCRIPCION:
- * INPUTS: número de inodo y struct STAT pasado por referencia
- * OUTPUTS:
- */
 int mi_stat_f(unsigned int ninodo, struct STAT *p_stat)
 {
     struct inodo inodo;
@@ -245,12 +250,6 @@ int mi_stat_f(unsigned int ninodo, struct STAT *p_stat)
     return EXITO;
 }
 
-/**
- * mi_chmod_f()
- * DESCRIPCION:
- * INPUTS: número de inodo y permisos
- * OUTPUTS:
- */
 int mi_chmod_f(unsigned int ninodo, unsigned char permisos)
 {
     // LEEMOS EL INODO CORRESPONDIENTE
@@ -272,12 +271,6 @@ int mi_chmod_f(unsigned int ninodo, unsigned char permisos)
     return EXITO;
 }
 
-/**
- * mi_truncar_f()
- * DESCRIPCION:
- * INPUTS: número de inodo y bytes a truncar
- * OUTPUTS:
- */
 int mi_truncar_f(unsigned int ninodo, unsigned int nbytes)
 {
 
