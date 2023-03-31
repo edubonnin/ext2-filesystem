@@ -1,62 +1,29 @@
-/*
-PROGRAMA *** escribir.c ***
-./ escribir disco "$(cat text2.txt)" 0 --> en cada uno de los offsets del mismo inodo
-                              1 --> diferentes inodos (reservar inodo cada vez que se quiere cambiar de offset)
-*/
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
 #include "ficheros.h"
 
 #define DEBUG 0 // Debugger que lee al escribir
 
-/**
- * ---------------------------------------------------------------------
- *                          escribir.c:
- * ---------------------------------------------------------------------
- *
- * Programa externo ficticio sólo para probar, temporalmente,
- * la funcionalidad de escritura.
- *
- * Escribirá texto en uno o varios inodos haciendo uso de
- * reservar_inodo('f', 6) para obtener un nº de inodo, ninodo, que
- * mostraremos por pantalla y además utilizaremos como parámetro
- * para mi_write_f().
- *
- * Para indicar el texto a escribir tenéis varias opciones a escoger:
- *
- * 1- Pasarlo como argumento escribiéndolo en consola y utilizar la función
- * strlen() para calcular su longitud.
- *
- * 2- Pasarlo como argumento haciendo el cat de cualquier fichero, por ejemplo
- * un fichero.c de vuestra práctica de la siguiente manera:
- *      “$(cat dir_practica/fichero.c)”
- *
- * 3- Asignarlo a un buffer desde código de esta manera:
- *      char buffer[tamanyo];
- *      strcpy (buffer, "blablabla...");
- *
- * 4- Pasar como argumento el nombre de un fichero externo que contenga el texto
- */
-
 int main(int argc, char *argv[])
 {
-    // Consula de sintaxis correcta
+    // CONSULTA QUE LA SINTAXIS SEA CORRECTA
     if (argc != 4)
     {
-        fprintf(stderr, "Error Sintaxis: escribir <nombre_dispositivo> <\"$(cat fichero)\"> <diferentes_inodos>\n");
+        fprintf(stderr, ROJO "Sintaxis: escribir <nombre_dispositivo> <'$(cat fichero)'> <diferentes_inodos>\nOffsets: 9000, 209000, 30725000, 409605000, 480000000\nSi diferentes_inodos=0 se reserva un solo inodo para todos los offsets\n" RESET);
         return FALLO;
     }
 
     printf("longitud texto: %ld\n\n", strlen(argv[2]));
     int offsets[5] = {9000, 209000, 30725000, 409605000, 480000000};
 
-    // Monta el dispositivo virtual en el sistema.
+    // LLAMA bmount PARA MONTAR EL DISPOSITIVO VIRTUAL
     if (bmount(argv[1]) < 0)
     {
         fprintf(stderr, "escribir.c: Error al montar el dispositivo virtual.\n");
         return FALLO;
     }
 
-    // Reserva un inodo para la escritura y se comprueba.
+    // RESERVA UN INODO
     int ninodo = reservar_inodo('f', 6);
     if (ninodo == FALLO)
     {
@@ -64,10 +31,9 @@ int main(int argc, char *argv[])
         return FALLO;
     }
 
-    // Bucle de escritura en todos los offsets del array.
+    //ESCRIBE EL ARGV[2] PARA TODOS LOS OFFSETS
     for (int i = 0; i < (sizeof(offsets) / sizeof(int)); i++)
     {
-
         printf("Nº inodo reservado: %d\n", ninodo);
         printf("offset: %d\n", offsets[i]);
         int bytesescritos = mi_write_f(ninodo, argv[2], offsets[i], strlen(argv[2]));
@@ -86,7 +52,7 @@ int main(int argc, char *argv[])
         printf("Bytes leídos: %d\n", leidos);
 #endif
 
-        // Obtencion de la información del inodo escrito
+        // SE OBTIENE LA INFORMACION DEL INODO DONE SE HA ESCRITO ANTERIORMENTE
         struct STAT p_stat;
         if (mi_stat_f(ninodo, &p_stat))
         {
@@ -94,10 +60,10 @@ int main(int argc, char *argv[])
             return FALLO;
         }
 
-        printf("stat.tamEnBytesLog = %d\n", p_stat.tamEnBytesLog);
-        printf("stat.numBloquesOcupados = %d\n\n", p_stat.numBloquesOcupados);
+        printf("stat.tamEnBytesLog=%d\n", p_stat.tamEnBytesLog);
+        printf("stat.numBloquesOcupados=%d\n\n", p_stat.numBloquesOcupados);
 
-        // Si el parámetro <diferentes_indodos> es 0, reserva un nuevo inodo.
+        // EN EL CASO DE QUE EL TERCER PARAMETRO SEA 0 RESERVARÀ UN NUEVO INODO
         if (strcmp(argv[3], "0"))
         {
             ninodo = reservar_inodo('f', 6);
@@ -109,7 +75,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    // Desmonta el dispositivo virtual
+    // DESMONTA EL DISPOSITIVO VIRTUAL
     if (bumount() < 0)
     {
         fprintf(stderr, "escribir.c: Error al desmonta el dispositivo virtual.\n");

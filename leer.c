@@ -1,80 +1,60 @@
-/*
-PROGRAMA *** leer.c ***
-./leer
-*/
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
 #include "ficheros.h"
 
 #define tambuffer 1500
 #define DEBUG 1
 
-/**
- * ---------------------------------------------------------------------
- *                          leer.c:
- * ---------------------------------------------------------------------
- *
- * Programa externo ficticio sólo para probar, temporalmente,
- * la funcionalidad de lectura.
- *
- * Le pasaremos por línea de comandos un nº de inodo obtenido con el
- * programa anterior (escribir.c). ninodo, (además del nombre del
- * dispositivo). Su funcionamiento tiene que ser similar al comando
- * cat de Linux, explorando TODO el fichero.
- *
- */
-
 int main(int argc, char const *argv[])
 {
-    // Variables
     int ninodo;
     struct superbloque SB;
     struct inodo inodo;
-    // Para lectura
     int offset = 0;
     int bytesleidos = 0;
     char buffer[tambuffer];
 
-    // Sintaxis correcta
+    // SINTAXIS CORRECTA
     if (argc != 3)
     {
         fprintf(stderr, "Sintaxis: leer <nombre_dispositivo><numero_inodo>\n");
         return FALLO;
     }
 
-    // Inicializacion del buffer a 0.
+    //INICIALIZACION DEL BUFFER
     memset(buffer, 0, tambuffer);
     ninodo = atoi(argv[2]);
-    // Montar el dispositivo en el sistema.
+    //MONTAR EL DISPOSITIVO
     if (bmount(argv[1]) == -1)
     {
         fprintf(stderr, "leer.c: Error al montar el dispositivo.\n");
         return FALLO;
     }
 
-    // Leer superbloque
+    //LECTURA DEL SUPERBLOQUE
     if (bread(0, &SB) == FALLO)
     {
         fprintf(stderr, "leer.c: Error de lectura del superbloque.\n");
         return FALLO;
     }
 
-    // Lee del fichero hasta llenar el buffer o fin de fichero.
+    //LECTURA DEL FICHERO HASTA LLEGAR AL FINAL
     int auxBytesLeidos = mi_read_f(ninodo, buffer, offset, sizeof(buffer));
     while (auxBytesLeidos > 0)
     {
         bytesleidos += auxBytesLeidos;
-        // Escribe el contenido del buffer en el destino indicado.
+        //ESCRITURA DEL BUFFER
         write(1, buffer, auxBytesLeidos);
 
-        // Limpiar buffer
+        //LIMPIEZA DEL BUFFER
         memset(buffer, 0, tambuffer);
-        // Actulizar offset
+        //ACTUALIZACIÓN DEL OFFSET
         offset += tambuffer;
-        // Leemos otra vez
+        //LECTURA
         auxBytesLeidos = mi_read_f(ninodo, buffer, offset, sizeof(buffer));
     }
 
-    // Leer el inodo del archivo
+    //LECTURA DEL INODO DEL ARCHIVO
     if (leer_inodo(ninodo, &inodo))
     {
         fprintf(stderr, "Error con la lectura del inodo.\n");
@@ -82,10 +62,10 @@ int main(int argc, char const *argv[])
     }
 
 #if DEBUG
-    fprintf(stderr, "\ntotal_bytesleidos: %d\ntamEnBytesLog: %d\n", bytesleidos, inodo.tamEnBytesLog);
+    fprintf(stderr, "\ntotal_leidos: %d\ntamEnBytesLog: %d\n", bytesleidos, inodo.tamEnBytesLog);
 #endif
 
-    // Desmonta el dispositivo virtual
+    // SE DESMONTA EL DISPOSITIVO
     if (bumount() == FALLO)
     {
         fprintf(stderr, "leer.c: Error al desmonta el dispositivo virtual.\n");
