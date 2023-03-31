@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
         return FALLO;
     }
 
-    //ESCRIBE EL ARGV[2] PARA TODOS LOS OFFSETS
+    // ESCRIBE EL ARGV[2] PARA TODOS LOS OFFSETS
     for (int i = 0; i < (sizeof(offsets) / sizeof(int)); i++)
     {
         printf("Nº inodo reservado: %d\n", ninodo);

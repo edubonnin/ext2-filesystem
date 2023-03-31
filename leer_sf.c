@@ -92,7 +92,7 @@ int main(int argc, char const *argv[])
 #if DEBUGN3
     printf("\nRESERVAMOS UN BLOQUE Y LUEGO LO LIBERAMOS:\n");
     int reservado = reservar_bloque();
-    bread(posSB, &SB); 
+    bread(posSB, &SB);
 
     printf("Se ha reservado el bloque físico nº %i que era el 1º libre indicado por el MB.\n", reservado);
     printf("SB.cantBloquesLibres: %i\n", SB.cantBloquesLibres);
