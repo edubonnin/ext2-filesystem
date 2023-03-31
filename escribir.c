@@ -6,8 +6,7 @@ PROGRAMA *** escribir.c ***
 
 #include "ficheros.h"
 
-#define DEBUG 1     // Debugger a enseñar tamaños logicos & bloques ocupados
-#define DEBUGREAD 0 // Debugger que lee al escribir
+#define DEBUG 0 // Debugger que lee al escribir
 
 /**
  * ---------------------------------------------------------------------
@@ -79,7 +78,7 @@ int main(int argc, char *argv[])
         }
         printf("Bytes escritos: %d\n", bytesescritos);
 
-#if DEBUGREAD
+#if DEBUG
         int longitud = strlen(argv[2]);
         char *buffer_texto = malloc(longitud);
         memset(buffer_texto, 0, longitud);
