@@ -22,6 +22,7 @@
 #define ROJO "\x1b[91m"
 #define RESET "\033[0m"
 
+// FUNCIONES
 int bmount(const char *camino);
 int bumount();
 int bwrite(unsigned int nbloque, const void *buf);

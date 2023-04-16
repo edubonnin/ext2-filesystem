@@ -1,11 +1,11 @@
 // RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
-#include "ficheros_basico.h"
+#include "directorios.h"
 
 #define DEBUGN1 1 // DEBUGGER QUE MUESTRA EL CONTENIDO DEL SUPERBLOQUE
 #define DEBUGN2 0
 #define DEBUGN3 0
 #define DEBUGN4 0
-#define DEBUGN7 0
+#define DEBUGN7 1
 
 void mostrar_buscar_entrada(char *camino, char reservar);
 
@@ -93,7 +93,7 @@ int main(int argc, char const *argv[])
 #if DEBUGN3
     printf("\nRESERVAMOS UN BLOQUE Y LUEGO LO LIBERAMOS:\n");
     int reservado = reservar_bloque();
-    bread(posSB, &SB); 
+    bread(posSB, &SB);
 
     printf("Se ha reservado el bloque físico nº %i que era el 1º libre indicado por el MB.\n", reservado);
     printf("SB.cantBloquesLibres: %i\n", SB.cantBloquesLibres);
@@ -202,17 +202,15 @@ int main(int argc, char const *argv[])
 
 void mostrar_buscar_entrada(char *camino, char reservar)
 {
-    // unsigned int p_inodo_dir = 0;
-    // unsigned int p_inodo = 0;
-    // unsigned int p_entrada = 0;
-    // int error;
-    // printf("\ncamino: %s, reservar: %d\n", camino, reservar);
-    // error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, reservar, 6);
-    // // fprintf(stderr, "Error: %i\n", error);
-    // if (error < 0)
-    // {
-    //     mostrar_error_buscar_entrada(error);
-    // }
-    // printf("**********************************************************************\n");
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
+    int error;
+    printf("\ncamino: %s, reservar: %d\n", camino, reservar);
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, reservar, 6)) < 0)
+    {
+        mostrar_error_buscar_entrada(error);
+    }
+    printf("**********************************************************************\n");
     return;
 }

@@ -1,6 +1,6 @@
 // RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
-#include "ficheros_basico.h"
+#include "directorios.h"
 
 int main(int argc, char **argv)
 {
