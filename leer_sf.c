@@ -173,3 +173,4 @@ int main(int argc, char const *argv[])
     printf("Número de bloques ocupados: %i\n", inodoAux.numBloquesOcupados);
     printf("\nSB.posPrimerInodoLibre = %d\n", SB.posPrimerInodoLibre);
 #endif
+}
