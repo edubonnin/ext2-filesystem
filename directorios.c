@@ -2,61 +2,31 @@
 
 #define DEBUGN8 1 // DEBUGGER DE bucar_entrada
 
-// int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
-// {
-//     char s = "/";
-
-//     char *aux = strtok(camino, s);
-//     aux = strtok(NULL, s);
-//     strcpy(inicial, aux);
-
-//     if (strtok(NULL, s) == NULL)
-//     {
-//         final = "";
-//         tipo = 'f';
-//     }
-//     else
-//     {
-//         strncpy(final, camino, strlen(inicial) + 1);
-//         tipo = 'd';
-//     }
-
-//     return EXITO;
-// }
+#include <stdbool.h>
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
 {
-    // Si el camino no comienza con '/' entonces error.
-    if (camino[0] != '/')
+    if (*camino != '/')
     {
         return FALLO;
     }
 
-    // Localizar la primera barra despues de la inicial.
-    //+1 para evitar la primera '/'
-    char *rest = strchr((camino + 1), '/');
-    strcpy(tipo, "f");
+    // Encontrar la posición del segundo '/'
+    const char *segundo_slash = strchr(camino + 1, '/');
 
-    // Si se ha encotrado el caracter '/'
-    if (rest)
+    // Copiar la porción de 'camino' entre los dos primeros '/' en 'inicial'
+    if (segundo_slash != NULL)
     {
-        // Inicial = camino - resto (Copiamos todo en inicial menos el resto)
-        strncpy(inicial, (camino + 1), (strlen(camino) - strlen(rest) - 1));
-        // Final = resto
-        strcpy(final, rest);
-
-        // Mirar si se trata de un directorio
-        if (final[0] == '/')
-        {
-            strcpy(tipo, "d");
-        }
+        strncpy(inicial, camino + 1, segundo_slash - (camino + 1));
+        inicial[segundo_slash - (camino + 1)] = '\0';
+        strcpy(final, segundo_slash);
+        *tipo = 'd';
     }
-    else // Si no se ha encotrado
+    else
     {
-        // Inicial = camino
-        strcpy(inicial, (camino + 1));
-        // Final: vacio
-        strcpy(final, "");
+        strcpy(inicial, camino + 1);
+        *final = '\0';
+        *tipo = 'f';
     }
 
     return EXITO;
@@ -79,8 +49,8 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
 //     {
 //         struct superbloque SB;
 //         bread(posSB, &SB);
-//         *(p_inodo) = SB.posInodoRaiz;
-//         *(p_entrada) = 0;
+//         *p_inodo = SB.posInodoRaiz;
+//         *p_entrada = 0;
 //         return EXITO;
 //     }
 
@@ -93,13 +63,18 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
 //     fprintf(stderr, "[buscar_entrada()->inicial: %s, final: %s, reservar: %d]\n", inicial, final, reservar);
 // #endif
 
-//     if (leer_inodo(*p_inodo_dir, &inodo_dir) == FALLO)
+//     leer_inodo(*p_inodo_dir, &inodo_dir);
+//     // COMPROBACIÓN PERMISOS DE LECTURA
+//     if ((inodo_dir.permisos & 4) != 4)
 //     {
 //         return ERROR_PERMISO_LECTURA;
 //     }
 
-//     struct entrada buff_lec[BLOCKSIZE / sizeof(struct entrada)];
-//     memset(buff_lec, 0, (BLOCKSIZE / sizeof(struct entrada)) * sizeof(struct entrada));
+//     // struct entrada buff_lec[BLOCKSIZE / sizeof(struct entrada)];
+//     // memset(buff_lec, 0, (BLOCKSIZE / sizeof(struct entrada)) * sizeof(struct entrada));
+
+//     memset(entrada.nombre, 0, sizeof(entrada.nombre));
+
 //     cant_entradas_inodo = inodo_dir.tamEnBytesLog / sizeof(struct entrada);
 //     num_entrada_inodo = 0;
 
@@ -207,6 +182,35 @@ int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
 //     }
 //     return EXITO;
 // }
+
+void mostrar_error_buscar_entrada(int error)
+{
+    // fprintf(stderr, "Error: %d\n", error);
+    switch (error)
+    {
+    case -2:
+        fprintf(stderr, ROJO "Error: Camino incorrecto.\n" RESET);
+        break;
+    case -3:
+        fprintf(stderr, ROJO "Error: Permiso denegado de lectura.\n" RESET);
+        break;
+    case -4:
+        fprintf(stderr, ROJO "Error: No existe el archivo o el directorio.\n" RESET);
+        break;
+    case -5:
+        fprintf(stderr, ROJO "Error: No existe algún directorio intermedio.\n" RESET);
+        break;
+    case -6:
+        fprintf(stderr, ROJO "Error: Permiso denegado de escritura.\n" RESET);
+        break;
+    case -7:
+        fprintf(stderr, ROJO "Error: El archivo ya existe.\n" RESET);
+        break;
+    case -8:
+        fprintf(stderr, ROJO "Error: No es un directorio.\n" RESET);
+        break;
+    }
+}
 
 int buscar_entrada(const char *camino_parcial, unsigned int *p_inodo_dir, unsigned int *p_inodo,
                    unsigned int *p_entrada, char reservar, unsigned char permisos)
@@ -365,33 +369,4 @@ int buscar_entrada(const char *camino_parcial, unsigned int *p_inodo_dir, unsign
         return buscar_entrada(final, p_inodo_dir, p_inodo, p_entrada, reservar, permisos);
     }
     return EXITO;
-}
-
-void mostrar_error_buscar_entrada(int error)
-{
-    // fprintf(stderr, "Error: %d\n", error);
-    switch (error)
-    {
-    case -2:
-        fprintf(stderr, ROJO "Error: Camino incorrecto.\n" RESET);
-        break;
-    case -3:
-        fprintf(stderr, ROJO "Error: Permiso denegado de lectura.\n" RESET);
-        break;
-    case -4:
-        fprintf(stderr, ROJO "Error: No existe el archivo o el directorio.\n" RESET);
-        break;
-    case -5:
-        fprintf(stderr, ROJO "Error: No existe algún directorio intermedio.\n" RESET);
-        break;
-    case -6:
-        fprintf(stderr, ROJO "Error: Permiso denegado de escritura.\n" RESET);
-        break;
-    case -7:
-        fprintf(stderr, ROJO "Error: El archivo ya existe.\n" RESET);
-        break;
-    case -8:
-        fprintf(stderr, ROJO "Error: No es un directorio.\n" RESET);
-        break;
-    }
 }
