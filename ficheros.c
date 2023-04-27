@@ -2,8 +2,6 @@
 
 #include "ficheros.h"
 
-#define DEBUG 0
-
 int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offset, unsigned int nbytes)
 {
     struct inodo inodo;
@@ -216,16 +214,10 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     // Comprobar que no haya errores de escritura
     if (nbytes == bytesleidos)
     {
-#if DEBUG
-        printf("\tmi_read_f: BIEN\n");
-#endif
         return bytesleidos;
     }
     else
     {
-#if DEBUG
-        printf("mi_read_f(): MAL\n\tnbytes:%i\n\tbytesleidos:%i\n", nbytes, bytesleidos);
-#endif
         return FALLO;
     }
 }
