@@ -230,7 +230,8 @@ int mi_creat(const char *camino, unsigned char permisos)
         return EXITO;
     }
 }
-int mi_dir(const char *camino, char *buffer, char tipo)
+
+int mi_dir(const char *camino, char *buffer)
 {
     struct entrada entrada;
     struct inodo inodo;
@@ -257,12 +258,20 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         strcat(buffer, "-");
 
     memset(entrada.nombre, 0, sizeof(entrada.nombre));
+    int total_entradas;
 
-    for (size_t i = 0; i < inodo.tamEnBytesLog / sizeof(entrada.nombre) || strcmp(camino, entrada.nombre); i++)
+    for (total_entradas = 0; total_entradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); total_entradas++)
     {
-        /* code */
+        if (mi_read_f(ninodo, &entrada, total_entradas * sizeof(struct entrada), sizeof(struct entrada)) < 0) {
+            return FALLO;
+        }
+        strcat(buffer, entrada.nombre + '\t');
+        memset(entrada.nombre, 0, sizeof(entrada.nombre));
     }
+
+    return total_entradas;
 }
+
 int mi_chmod(const char *camino, unsigned char permisos)
 {
     unsigned int inodo_dir = 0;
@@ -279,3 +288,19 @@ int mi_chmod(const char *camino, unsigned char permisos)
         return EXITO;
     }
 }
+
+int mi_stat(const char *camino, struct STAT *p_stat) {
+    int inodo_dir=0,inodo=0,entrada=0;
+    int numerror;
+    if ((numerror=buscar_entrada(camino,&inodo_dir,&inodo,&entrada,'0',p_stat->permisos))<0)
+    {
+        return numerror;
+    }else{
+        if(mi_stat_f(inodo,p_stat)==FALLO){
+            return FALLO;
+        }
+    }
+    
+    return inodo;
+}
+

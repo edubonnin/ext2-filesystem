@@ -26,7 +26,10 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    // bmount
+    if (bmount(argv[1]) == FALLO)
+    {
+        return FALLO;
+    }
 
     if ((error = mi_creat(ruta, permisos)) != EXITO)
     {
@@ -34,7 +37,10 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    // bumount
+    if (bumount() == FALLO)
+    {
+        return FALLO;
+    }
 
     return EXITO;
 }

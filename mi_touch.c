@@ -20,13 +20,16 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    if (ruta[strlen(ruta) - 1] != '/')
+    if (ruta[strlen(ruta) - 1] == '/')
     {
-        fprintf(stderr, ROJO "Error: No es un directorio." RESET, permisos);
+        fprintf(stderr, ROJO "Error: No es un fichero." RESET, permisos);
         return FALLO;
     }
 
-    // bmount
+    if (bmount(argv[1]) == FALLO)
+    {
+        return FALLO;
+    }
 
     if ((error = mi_creat(ruta, permisos)) != EXITO)
     {
@@ -34,7 +37,10 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    // bumount
+    if (bumount() == FALLO)
+    {
+        return FALLO;
+    }
 
     return EXITO;
 }

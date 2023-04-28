@@ -4,6 +4,7 @@
     "files.associations": {
         "errno.h": "c",
         "ficheros.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "directorios.h": "c"
     }
 }
