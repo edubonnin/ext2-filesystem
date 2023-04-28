@@ -17,9 +17,9 @@ struct entrada
 #define ERROR_ENTRADA_YA_EXISTENTE -7
 #define ERROR_NO_SE_PUEDE_CREAR_ENTRADA_EN_UN_FICHERO -8
 
-// mi_ls.c
+// AUXILIARES mi_ls.c
 #define TAMFILA 100
-#define TAMBUFFER (TAMFILA*1000) //suponemos un máx de 1000 entradas, aunque debería ser SB.totInodos
+#define TAMBUFFER (TAMFILA * 1000) // suponemos un máx de 1000 entradas, aunque debería ser SB.totInodos
 
 // FUNCIONES
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo);

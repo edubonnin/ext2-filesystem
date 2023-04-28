@@ -24,8 +24,9 @@ int main(int argc, char const *argv[])
     // INICIALIZACION DEL BUFFER
     memset(buffer, 0, tambuffer);
     ninodo = atoi(argv[2]);
+
     // MONTAR EL DISPOSITIVO
-    if (bmount(argv[1]) == -1)
+    if (bmount(argv[1]) == FALLO)
     {
         fprintf(stderr, "leer.c: Error al montar el dispositivo.\n");
         return FALLO;
@@ -71,5 +72,6 @@ int main(int argc, char const *argv[])
         fprintf(stderr, "leer.c: Error al desmonta el dispositivo virtual.\n");
         return FALLO;
     }
+
     return EXITO;
 }

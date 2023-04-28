@@ -219,27 +219,37 @@ int mi_creat(const char *camino, unsigned char permisos)
     unsigned int inodo_dir = 0;
     unsigned int inodo = 0;
     unsigned int entrada = 0;
-    int numerror;
-    if (numerror = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
+    int nerror;
+
+    if (nerror = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
     {
-        return numerror;
+        return nerror;
     }
     else
     {
-
         return EXITO;
     }
 }
 
+/*  FALTA POR HACER en mi_dir()
+    * cuando se obtiene el nº de inodo asociado a cada entrada,
+    hay que leer el inodo correspondiente e incorporar al buffer los
+    datos de tal inodo que vayan a aparecer en el listado.
+    * aportar información de color al buffer en función de si
+    es fichero o directorio
+    * hacer --> int mi_dir(const char *camino, char *buffer, char tipo);
+*/
 int mi_dir(const char *camino, char *buffer)
 {
     struct entrada entrada;
     struct inodo inodo;
 
     int *ninodo;
+    int nerror;
 
-    if (buscar_entrada(camino, 0, ninodo, 0, 0, 'r') == FALLO)
+    if ((nerror = buscar_entrada(camino, 0, ninodo, 0, 0, 'r')) < 0)
     {
+        mostrar_error_buscar_entrada(nerror);
         return FALLO;
     }
 
@@ -262,7 +272,8 @@ int mi_dir(const char *camino, char *buffer)
 
     for (total_entradas = 0; total_entradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); total_entradas++)
     {
-        if (mi_read_f(ninodo, &entrada, total_entradas * sizeof(struct entrada), sizeof(struct entrada)) < 0) {
+        if (mi_read_f(ninodo, &entrada, total_entradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
+        {
             return FALLO;
         }
         strcat(buffer, entrada.nombre + '\t');
@@ -277,30 +288,28 @@ int mi_chmod(const char *camino, unsigned char permisos)
     unsigned int inodo_dir = 0;
     unsigned int inodo = 0;
     unsigned int entrada = 0;
-    int fallo;
-    if (fallo = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
+    int nerror;
+
+    if ((nerror = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos)) < 0)
     {
-        return fallo;
+        mostrar_error_buscar_entrada(nerror);
+        return nerror;
     }
-    else
-    {
-        mi_chmod_f(inodo, permisos);
-        return EXITO;
-    }
+
+    mi_chmod_f(inodo, permisos);
+    return EXITO;
 }
 
-int mi_stat(const char *camino, struct STAT *p_stat) {
-    int inodo_dir=0,inodo=0,entrada=0;
-    int numerror;
-    if ((numerror=buscar_entrada(camino,&inodo_dir,&inodo,&entrada,'0',p_stat->permisos))<0)
+int mi_stat(const char *camino, struct STAT *p_stat)
+{
+    int inodo_dir = 0, inodo = 0, entrada = 0;
+    int nerror;
+    if ((nerror = buscar_entrada(camino, &inodo_dir, &inodo, &entrada, '0', p_stat->permisos)) < 0)
     {
-        return numerror;
-    }else{
-        if(mi_stat_f(inodo,p_stat)==FALLO){
-            return FALLO;
-        }
+        mostrar_error_buscar_entrada(nerror);
+        return nerror;
     }
-    
+
+    mi_stat_f(inodo, p_stat);
     return inodo;
 }
-

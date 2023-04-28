@@ -1,3 +1,5 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
+
 #include "directorios.h"
 int main(int argc, char const *argv[])
 {
@@ -13,12 +15,12 @@ int main(int argc, char const *argv[])
         fprintf(stderr, ROJO "Error en el montaje del disco" RESET);
         return FALLO;
     }
-    if (ninodo = mi_stat(argv[2], &stat)<0)
+    if (ninodo = mi_stat(argv[2], &stat) < 0)
     {
         mostrar_error_buscar_entrada(ninodo);
         return FALLO;
     }
-     struct tm *ts;
+    struct tm *ts;
     char atime[80];
     char mtime[80];
     char ctime[80];
