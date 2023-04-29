@@ -247,7 +247,7 @@ int mi_dir(const char *camino, char *buffer)
     int *ninodo;
     int nerror;
 
-    if ((nerror = buscar_entrada(camino, 0, ninodo, 0, 0, 'r')) < 0)
+    if ((nerror = buscar_entrada(camino, 0, ninodo, 0, 0, 0)) < 0)
     {
         mostrar_error_buscar_entrada(nerror);
         return FALLO;
@@ -313,3 +313,29 @@ int mi_stat(const char *camino, struct STAT *p_stat)
     mi_stat_f(inodo, p_stat);
     return inodo;
 }
+
+//FUNCION NECESARA PARA EL mi_escribir.c
+int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes){
+    int p_inodo;
+
+    //BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+    if(buscar_entrada(camino, 0, p_inodo, 0, '1', 0) == FALLO){ //reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
+        return FALLO;
+    }
+
+    //DEVUELVE EL NUMERO DE BYTES ESCRITOS
+    return mi_write_f(p_inodo,buf,offset,nbytes);
+}
+
+int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes){
+    int p_inodo;
+
+    //BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+    if(buscar_entrada(camino, 0, p_inodo, 0, '0', 0) == FALLO){ //reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
+        return FALLO;
+    }
+
+    //DEVUELVE EL NUMERO DE BYTES LEIDOS
+    return mi_read_f(p_inodo,buf,offset,nbytes);
+}
+

@@ -81,5 +81,5 @@ int main(int argc, char *argv[])
         fprintf(stderr, "escribir.c: Error al desmonta el dispositivo virtual.\n");
         return FALLO;
     }
-    return EXIT_SUCCESS;
+    return EXITO;
 }

@@ -46,7 +46,7 @@ int main(int argc, char const *argv[])
         bytesleidos += auxBytesLeidos;
         // ESCRITURA DEL BUFFER
         write(1, buffer, auxBytesLeidos);
-
+        
         // LIMPIEZA DEL BUFFER
         memset(buffer, 0, tambuffer);
         // ACTUALIZACIÓN DEL OFFSET
