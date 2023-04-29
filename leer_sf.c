@@ -7,8 +7,6 @@
 #define DEBUGN4 0
 #define DEBUGN7 1
 
-void mostrar_buscar_entrada(char *camino, char reservar);
-
 int main(int argc, char const *argv[])
 {
     // VALIDACIÓN SINTAXIS

@@ -219,11 +219,11 @@ int mi_creat(const char *camino, unsigned char permisos)
     unsigned int inodo_dir = 0;
     unsigned int inodo = 0;
     unsigned int entrada = 0;
-    int nerror;
+    int error;
 
-    if (nerror = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
+    if (error = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
     {
-        return nerror;
+        return error;
     }
     else
     {
@@ -244,76 +244,91 @@ int mi_dir(const char *camino, char *buffer, char tipo)
     struct inodo inodo;
     struct tm *tm;
 
-    int *ninodo, total_entradas, nerror;
+    int *ninodo, totalentradas, error;
 
-    char *tmp;
+    char *tmp, *tamaño;
 
-    if ((nerror = buscar_entrada(camino, 0, ninodo, 0, 0, 0)) < 0)
+    // *** hay que hacer uso de esto ***
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
+
+    // COMPROBAMOS QUE LA ENTRADA CORRESPONDIENTE A CAMINO EXISTE
+    // *** debería ser buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4) ***
+    if ((error = buscar_entrada(camino, 0, ninodo, 0, 0, 0)) < 0)
     {
-        mostrar_error_buscar_entrada(nerror);
+        mostrar_error_buscar_entrada(error);
         return FALLO;
     }
 
+    // LEEMOS EL INODO DE LA ENTRADA
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
         return FALLO;
     }
 
+    // COMPROBACIÓN PERMISOS DE LECTURA
+    if ((inodo.permisos & 4) != 4)
+    {
+        return FALLO;
+    }
+
+    // COMPARACIÓN DE LA SINTAXIS CON EL TIPO REAL DEL INODO
     if (inodo.tipo != tipo)
     {
         fprintf(stderr, ROJO "Error: la sintaxis no concuerda con el tipo\n" RESET);
         return FALLO;
     }
 
-    // INFORMACIÓN ACERCA DE TIPO
-    if (inodo.tipo == 'd')
+    for (totalentradas = 0; totalentradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); totalentradas++)
     {
-        strcat(buffer, VERDE "d\t");
-    }
-    else
-    {
-        strcat(buffer, MAGENTA "f\t");
-    }
+        // INFORMACIÓN ACERCA DE TIPO
+        if (inodo.tipo == 'd')
+        {
+            strcat(buffer, VERDE "d\t");
+        }
+        else
+        {
+            strcat(buffer, MAGENTA "f\t");
+        }
 
-    // INFORMACIÓN ACERCA DE PERMISOS
-    if (inodo.permisos & 4)
-        strcat(buffer, "r");
-    else
-        strcat(buffer, "-");
-    if (inodo.permisos & 2)
-        strcat(buffer, "w");
-    else
-        strcat(buffer, "-");
-    if (inodo.permisos & 1)
-        strcat(buffer, "x");
-    else
-        strcat(buffer, "-");
+        // INFORMACIÓN ACERCA DE PERMISOS
+        if (inodo.permisos & 4)
+            strcat(buffer, "r");
+        else
+            strcat(buffer, "-");
+        if (inodo.permisos & 2)
+            strcat(buffer, "w");
+        else
+            strcat(buffer, "-");
+        if (inodo.permisos & 1)
+            strcat(buffer, "x");
+        else
+            strcat(buffer, "-");
 
-    strcat(buffer, "\t");
+        strcat(buffer, "\t");
 
-    // INFORMACIÓN ACERCA DEL TIEMPO
-    tm = localtime(&inodo.mtime);
-    sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    strcat(buffer, tmp);
-    strcat(buffer, "\t\t\t");
+        // INFORMACIÓN ACERCA DEL TIEMPO
+        tm = localtime(&inodo.mtime);
+        sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+        strcat(buffer, tmp);
+        strcat(buffer, "\t\t\t");
 
-    // INFORMACIÓN ACERCA DEL NOMBRE
-    memset(entrada.nombre, 0, sizeof(entrada.nombre));
+        // INFORMACIÓN ACERCA DEL NOMBRE
+        memset(entrada.nombre, 0, sizeof(entrada.nombre));
 
-    for (total_entradas = 0; total_entradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); total_entradas++)
-    {
-        if (mi_read_f(ninodo, &entrada, total_entradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
+        if (mi_read_f(ninodo, &entrada, totalentradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
         {
             return FALLO;
         }
-        
+
         strcat(buffer, entrada.nombre + '\t');
         memset(entrada.nombre, 0, sizeof(entrada.nombre));
     }
 
-    strcat(buffer,RESET"\n");
+    strcat(buffer, RESET "\n");
 
-    return total_entradas;
+    return totalentradas;
 }
 
 int mi_chmod(const char *camino, unsigned char permisos)
@@ -321,12 +336,12 @@ int mi_chmod(const char *camino, unsigned char permisos)
     unsigned int inodo_dir = 0;
     unsigned int inodo = 0;
     unsigned int entrada = 0;
-    int nerror;
+    int error;
 
-    if ((nerror = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos)) < 0)
+    if ((error = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos)) < 0)
     {
-        mostrar_error_buscar_entrada(nerror);
-        return nerror;
+        mostrar_error_buscar_entrada(error);
+        return error;
     }
 
     mi_chmod_f(inodo, permisos);
@@ -336,11 +351,11 @@ int mi_chmod(const char *camino, unsigned char permisos)
 int mi_stat(const char *camino, struct STAT *p_stat)
 {
     int inodo_dir = 0, inodo = 0, entrada = 0;
-    int nerror;
-    if ((nerror = buscar_entrada(camino, &inodo_dir, &inodo, &entrada, '0', p_stat->permisos)) < 0)
+    int error;
+    if ((error = buscar_entrada(camino, &inodo_dir, &inodo, &entrada, '0', p_stat->permisos)) < 0)
     {
-        mostrar_error_buscar_entrada(nerror);
-        return nerror;
+        mostrar_error_buscar_entrada(error);
+        return error;
     }
 
     mi_stat_f(inodo, p_stat);
