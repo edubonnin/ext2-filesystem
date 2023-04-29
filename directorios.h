@@ -28,6 +28,6 @@ void mostrar_error_buscar_entrada(int error);
 int mi_creat(const char *camino, unsigned char permisos);
 int mi_stat(const char *camino, struct STAT *p_stat);
 int mi_chmod(const char *camino, unsigned char permisos);
-int mi_dir(const char *camino, char *buffer);
+int mi_dir(const char *camino, char *buffer, char tipo);
 int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes);
 int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes);

@@ -7,12 +7,12 @@ int main(int argc, char const *argv[])
     int ninodo;
     if (argc != 3)
     {
-        fprintf(stderr, ROJO "Error de sintaxis" RESET);
+        fprintf(stderr, ROJO "Error de sintaxis\n" RESET);
         return FALLO;
     }
     if (bmount(argv[1]) == FALLO)
     {
-        fprintf(stderr, ROJO "Error en el montaje del disco" RESET);
+        fprintf(stderr, ROJO "Error en el montaje del disco\n" RESET);
         return FALLO;
     }
     if (ninodo = mi_stat(argv[2], &stat) < 0)

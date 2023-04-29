@@ -37,7 +37,7 @@ int main(int argc, char const *argv[])
         offset += tambuffer;
         totalBytesLeidos += bytesLeidos;
         memset(buffer, 0, tambuffer);
-        bytesLeidos = mi_read(argv[2], buffer, offset, sizeof(buffer))
+        bytesLeidos = mi_read(argv[2], buffer, offset, sizeof(buffer));
     }
 
     printf("Bytes leidos: %d\n", totalBytesLeidos);

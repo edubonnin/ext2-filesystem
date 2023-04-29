@@ -6,7 +6,7 @@ int main(int argc, char const *argv[])
 {
     if (argc != 4)
     {
-        fprintf(stderr, ROJO "Sintaxis: ./mi_chmod <disco> <permisos> </ruta>" RESET);
+        fprintf(stderr, ROJO "Sintaxis: ./mi_chmod <disco> <permisos> </ruta>\n" RESET);
         return FALLO;
     }
 

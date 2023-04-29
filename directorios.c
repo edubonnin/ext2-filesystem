@@ -237,15 +237,16 @@ int mi_creat(const char *camino, unsigned char permisos)
     datos de tal inodo que vayan a aparecer en el listado.
     * aportar información de color al buffer en función de si
     es fichero o directorio
-    * hacer --> int mi_dir(const char *camino, char *buffer, char tipo);
 */
-int mi_dir(const char *camino, char *buffer)
+int mi_dir(const char *camino, char *buffer, char tipo)
 {
     struct entrada entrada;
     struct inodo inodo;
+    struct tm *tm;
 
-    int *ninodo;
-    int nerror;
+    int *ninodo, total_entradas, nerror;
+
+    char *tmp;
 
     if ((nerror = buscar_entrada(camino, 0, ninodo, 0, 0, 0)) < 0)
     {
@@ -253,7 +254,28 @@ int mi_dir(const char *camino, char *buffer)
         return FALLO;
     }
 
-    leer_inodo(ninodo, &inodo);
+    if (leer_inodo(ninodo, &inodo) == FALLO)
+    {
+        return FALLO;
+    }
+
+    if (inodo.tipo != tipo)
+    {
+        fprintf(stderr, ROJO "Error: la sintaxis no concuerda con el tipo\n" RESET);
+        return FALLO;
+    }
+
+    // INFORMACIÓN ACERCA DE TIPO
+    if (inodo.tipo == 'd')
+    {
+        strcat(buffer, VERDE "d\t");
+    }
+    else
+    {
+        strcat(buffer, MAGENTA "f\t");
+    }
+
+    // INFORMACIÓN ACERCA DE PERMISOS
     if (inodo.permisos & 4)
         strcat(buffer, "r");
     else
@@ -267,8 +289,16 @@ int mi_dir(const char *camino, char *buffer)
     else
         strcat(buffer, "-");
 
+    strcat(buffer, "\t");
+
+    // INFORMACIÓN ACERCA DEL TIEMPO
+    tm = localtime(&inodo.mtime);
+    sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+    strcat(buffer, tmp);
+    strcat(buffer, "\t\t\t");
+
+    // INFORMACIÓN ACERCA DEL NOMBRE
     memset(entrada.nombre, 0, sizeof(entrada.nombre));
-    int total_entradas;
 
     for (total_entradas = 0; total_entradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); total_entradas++)
     {
@@ -276,9 +306,12 @@ int mi_dir(const char *camino, char *buffer)
         {
             return FALLO;
         }
+        
         strcat(buffer, entrada.nombre + '\t');
         memset(entrada.nombre, 0, sizeof(entrada.nombre));
     }
+
+    strcat(buffer,RESET"\n");
 
     return total_entradas;
 }
@@ -314,28 +347,31 @@ int mi_stat(const char *camino, struct STAT *p_stat)
     return inodo;
 }
 
-//FUNCION NECESARA PARA EL mi_escribir.c
-int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes){
+// FUNCION NECESARA PARA EL mi_escribir.c
+int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
+{
     int p_inodo;
 
-    //BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
-    if(buscar_entrada(camino, 0, p_inodo, 0, '1', 0) == FALLO){ //reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
+    // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+    if (buscar_entrada(camino, 0, p_inodo, 0, '1', 0) == FALLO)
+    { // reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
         return FALLO;
     }
 
-    //DEVUELVE EL NUMERO DE BYTES ESCRITOS
-    return mi_write_f(p_inodo,buf,offset,nbytes);
+    // DEVUELVE EL NUMERO DE BYTES ESCRITOS
+    return mi_write_f(p_inodo, buf, offset, nbytes);
 }
 
-int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes){
+int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
+{
     int p_inodo;
 
-    //BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
-    if(buscar_entrada(camino, 0, p_inodo, 0, '0', 0) == FALLO){ //reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
+    // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+    if (buscar_entrada(camino, 0, p_inodo, 0, '0', 0) == FALLO)
+    { // reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
         return FALLO;
     }
 
-    //DEVUELVE EL NUMERO DE BYTES LEIDOS
-    return mi_read_f(p_inodo,buf,offset,nbytes);
+    // DEVUELVE EL NUMERO DE BYTES LEIDOS
+    return mi_read_f(p_inodo, buf, offset, nbytes);
 }
-
