@@ -10,10 +10,10 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    if (argv[2] < '0' || argv[2] > '7')
+    if (argv[2] < 0 || argv[2] > 7)
     {
         return FALLO;
     }
 
-    mi_chmod(argv[3], argv[2]);
+    mi_chmod(argv[3], atoi(argv[2]));
 }

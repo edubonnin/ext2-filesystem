@@ -214,14 +214,15 @@ void mostrar_error_buscar_entrada(int error)
         break;
     }
 }
+
 int mi_creat(const char *camino, unsigned char permisos)
 {
-    unsigned int inodo_dir = 0;
-    unsigned int inodo = 0;
-    unsigned int entrada = 0;
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
     int error;
 
-    if (error = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos) < 0)
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 1, permisos)) < 0)
     {
         return error;
     }
@@ -244,9 +245,9 @@ int mi_dir(const char *camino, char *buffer, char tipo)
     struct inodo inodo;
     struct tm *tm;
 
-    int *ninodo, totalentradas, error;
+    int totalentradas, error;
 
-    char *tmp, *tamaño;
+    char tmp[TAMFILA], *tamaño;
 
     // *** hay que hacer uso de esto ***
     unsigned int p_inodo_dir = 0;
@@ -254,15 +255,15 @@ int mi_dir(const char *camino, char *buffer, char tipo)
     unsigned int p_entrada = 0;
 
     // COMPROBAMOS QUE LA ENTRADA CORRESPONDIENTE A CAMINO EXISTE
-    // *** debería ser buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4) ***
-    if ((error = buscar_entrada(camino, 0, ninodo, 0, 0, 0)) < 0)
+    // ***  ***
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4)) < 0)
     {
         mostrar_error_buscar_entrada(error);
         return FALLO;
     }
 
     // LEEMOS EL INODO DE LA ENTRADA
-    if (leer_inodo(ninodo, &inodo) == FALLO)
+    if (leer_inodo(p_inodo, &inodo) == FALLO)
     {
         return FALLO;
     }
@@ -280,7 +281,7 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         return FALLO;
     }
 
-    for (totalentradas = 0; totalentradas < inodo.tamEnBytesLog / sizeof(struct entrada) || strcmp(camino, entrada.nombre); totalentradas++)
+    for (totalentradas = 0; totalentradas < inodo.tamEnBytesLog / sizeof(struct entrada); totalentradas++)
     {
         // INFORMACIÓN ACERCA DE TIPO
         if (inodo.tipo == 'd')
@@ -314,10 +315,12 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         strcat(buffer, tmp);
         strcat(buffer, "\t\t\t");
 
+        // INFORMACIÓN ACERCA DEL TAMAÑO
+
         // INFORMACIÓN ACERCA DEL NOMBRE
         memset(entrada.nombre, 0, sizeof(entrada.nombre));
 
-        if (mi_read_f(ninodo, &entrada, totalentradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
+        if (mi_read_f(p_inodo, &entrada, totalentradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
         {
             return FALLO;
         }
@@ -333,60 +336,67 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
 int mi_chmod(const char *camino, unsigned char permisos)
 {
-    unsigned int inodo_dir = 0;
-    unsigned int inodo = 0;
-    unsigned int entrada = 0;
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
     int error;
 
-    if ((error = buscar_entrada(camino, inodo_dir, inodo, entrada, '1', permisos)) < 0)
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 1, permisos)) < 0)
     {
         mostrar_error_buscar_entrada(error);
         return error;
     }
 
-    mi_chmod_f(inodo, permisos);
+    mi_chmod_f(p_inodo, permisos);
     return EXITO;
 }
 
 int mi_stat(const char *camino, struct STAT *p_stat)
 {
-    int inodo_dir = 0, inodo = 0, entrada = 0;
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
     int error;
-    if ((error = buscar_entrada(camino, &inodo_dir, &inodo, &entrada, '0', p_stat->permisos)) < 0)
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, p_stat->permisos)) < 0)
     {
         mostrar_error_buscar_entrada(error);
         return error;
     }
 
-    mi_stat_f(inodo, p_stat);
-    return inodo;
+    mi_stat_f(p_inodo, p_stat);
+    return p_inodo;
 }
 
-// FUNCION NECESARA PARA EL mi_escribir.c
-int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
-{
-    int p_inodo;
+// // FUNCION NECESARA PARA EL mi_escribir.c
+// int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
+// {
+//     unsigned int p_inodo_dir = 0;
+//     unsigned int p_inodo = 0;
+//     unsigned int p_entrada = 0;
 
-    // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
-    if (buscar_entrada(camino, 0, p_inodo, 0, '1', 0) == FALLO)
-    { // reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
-        return FALLO;
-    }
+//     int error;
 
-    // DEVUELVE EL NUMERO DE BYTES ESCRITOS
-    return mi_write_f(p_inodo, buf, offset, nbytes);
-}
+//     // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+//     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, '0', 0)) < 0)
+//     { // reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
+//         return FALLO;
+//     }
 
-int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
-{
-    int p_inodo;
+//     // DEVUELVE EL NUMERO DE BYTES ESCRITOS
+//     return mi_write_f(p_inodo, buf, offset, nbytes);
+// }
 
-    // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
-    if (buscar_entrada(camino, 0, p_inodo, 0, '0', 0) == FALLO)
-    { // reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
-        return FALLO;
-    }
+// int mi_read(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
+// {
+//     unsigned int p_inodo_dir = 0;
+//     unsigned int p_inodo = 0;
+//     unsigned int p_entrada = 0;
+//     // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
+//     if (buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, '0', 0) == FALLO)
+//     { // reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
+//         return FALLO;
+//     }
 
-    // DEVUELVE EL NUMERO DE BYTES LEIDOS
-    return mi_read_f(p_inodo, buf, offset, nbytes);
-}
+//     // DEVUELVE EL NUMERO DE BYTES LEIDOS
+//     return mi_read_f(p_inodo, &buf, offset, nbytes);
+// }

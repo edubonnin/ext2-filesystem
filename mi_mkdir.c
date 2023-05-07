@@ -5,8 +5,6 @@
 int main(int argc, char const *argv[])
 {
     int permisos = atoi(argv[2]), error;
-    char *ruta;
-    strcpy(ruta, argv[3]);
 
     // COMPROBACIÓN DE SINTAXIS
     if (argc != 4)
@@ -15,7 +13,7 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    if (ruta[strlen(ruta) - 1] != '/') // SI LA RUTA ES UN FICHERO, DEVOLVEMOS ERROR
+    if (argv[3][strlen(argv[3]) - 1] != '/') // SI LA RUTA ES UN FICHERO, DEVOLVEMOS ERROR
     {
         fprintf(stderr, ROJO "Error: No es un directorio.\n" RESET, permisos);
         return FALLO;
@@ -35,7 +33,7 @@ int main(int argc, char const *argv[])
     }
 
     // LLAMADA A mi_creat()
-    if ((error = mi_creat(ruta, permisos)) != EXITO)
+    if ((error = mi_creat(argv[3], permisos)) != EXITO)
     {
         mostrar_error_buscar_entrada(error);
         return FALLO;

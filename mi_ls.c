@@ -4,11 +4,9 @@
 
 int main(int argc, char const *argv[])
 {
-    char buffer[TAMBUFFER], *camino, tipo;
+    char buffer[TAMBUFFER], tipo;
     // memset buffer???
     int total;
-
-    strcpy(camino, argv[3]);
 
     // COMPROBACIÓN SINTAXIS
     if (argc != 3)
@@ -18,12 +16,12 @@ int main(int argc, char const *argv[])
     }
 
     // COMPROBACIÓN RUTA CORRECTA
-    if (argv[3][0] != '/')
+    if (argv[2][0] != '/')
     {
         return FALLO;
     }
 
-    if (camino[strlen(camino) - 1] == '/') // ES UN DIRECTORIO
+    if (argv[2][strlen(argv[3]) - 1] == '/') // ES UN DIRECTORIO
     {
         tipo = 'd';
     }
@@ -37,7 +35,7 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    if ((total = mi_dir(argv[3], buffer, tipo)) == FALLO)
+    if ((total = mi_dir(argv[2], buffer, tipo)) == FALLO)
     {
         return FALLO;
     }
