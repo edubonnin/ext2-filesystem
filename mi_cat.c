@@ -15,7 +15,6 @@ int main(int argc, char const *argv[])
 
     if (bmount(argv[1]) == FALLO)
     {
-        fprintf(stderr, "mi_cat.c: Error al montar el dispositivo.\n");
         return FALLO;
     }
 
@@ -45,7 +44,6 @@ int main(int argc, char const *argv[])
     // SE DESMONTA EL DISPOSITIVO
     if (bumount() == FALLO)
     {
-        fprintf(stderr, "mi_cat.c: Error al desmonta el dispositivo virtual.\n");
         return FALLO;
     }
 

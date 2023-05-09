@@ -20,6 +20,7 @@ int main(int argc, char const *argv[])
         mostrar_error_buscar_entrada(ninodo);
         return FALLO;
     }
+
     struct tm *ts;
     char atime[80];
     char mtime[80];
@@ -31,15 +32,20 @@ int main(int argc, char const *argv[])
     strftime(mtime, sizeof(mtime), "%a %Y-%m-%d %H:%M:%S", ts);
     ts = localtime(&stat.ctime);
     strftime(ctime, sizeof(ctime), "%a %Y-%m-%d %H:%M:%S", ts);
+
+    // Motramos valores
     printf("Nº de inodo: %d\n", ninodo);
     printf("tipo: %c\n", stat.tipo);
     printf("permisos: %d\n", stat.permisos);
-    printf("atime: %s\n", stat.atime);
-    printf("ctime: %s\n", stat.ctime);
-    printf("mtime: %s\n", stat.mtime);
+    printf("atime: %s\n", atime);
+    printf("ctime: %s\n", ctime);
+    printf("mtime: %s\n", mtime);
     printf("nlinks: %d\n", stat.nlinks);
     printf("tamEnBytesLog: %d\n", stat.tamEnBytesLog);
-    printf("numBloquesOcupados: %d\n", stat.numBloquesOcupados);
+    printf("numBloquesOcupados: %d\n\n", stat.numBloquesOcupados);
 
-    bumount();
+    if (bumount() == FALLO)
+    {
+        return FALLO;
+    }
 }

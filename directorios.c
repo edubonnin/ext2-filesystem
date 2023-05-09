@@ -4,6 +4,8 @@
 
 #define DEBUGN8 1 // DEBUGGER DE bucar_entrada
 
+#define ROJO "\x1b[91m"
+
 #include <stdbool.h>
 
 int extraer_camino(const char *camino, char *inicial, char *final, char *tipo)
@@ -248,14 +250,13 @@ int mi_dir(const char *camino, char *buffer, char tipo)
     int totalentradas, error;
 
     char tmp[TAMFILA], *tamaño;
+    char tamEnBytes[10];
 
-    // *** hay que hacer uso de esto ***
     unsigned int p_inodo_dir = 0;
     unsigned int p_inodo = 0;
     unsigned int p_entrada = 0;
 
     // COMPROBAMOS QUE LA ENTRADA CORRESPONDIENTE A CAMINO EXISTE
-    // ***  ***
     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4)) < 0)
     {
         mostrar_error_buscar_entrada(error);
@@ -281,17 +282,86 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         return FALLO;
     }
 
-    for (totalentradas = 0; totalentradas < inodo.tamEnBytesLog / sizeof(struct entrada); totalentradas++)
+    if (inodo.tipo == 'd')
     {
-        // INFORMACIÓN ACERCA DE TIPO
-        if (inodo.tipo == 'd')
+        if (leer_inodo(p_inodo, &inodo) == FALLO)
         {
-            strcat(buffer, VERDE "d\t");
+            return FALLO;
         }
-        else
+        struct entrada entradas[BLOCKSIZE / sizeof(struct entrada)];
+        memset(&entradas, 0, sizeof(struct entrada));
+        totalentradas = inodo.tamEnBytesLog / sizeof(struct entrada);
+        int offset = 0;
+        if (offset = mi_read_f(p_inodo, entradas, 0, BLOCKSIZE) < 0)
         {
-            strcat(buffer, MAGENTA "f\t");
+            return FALLO;
         }
+
+        for (int i = 0; i < totalentradas; i++)
+        {
+            if (leer_inodo(entradas[i % (BLOCKSIZE / sizeof(struct entrada))].ninodo, &inodo) == FALLO)
+            {
+                return FALLO;
+            }
+
+            // INFORMACIÓN ACERCA DE TIPO
+            if (inodo.tipo == 'd')
+            {
+                strcat(buffer, VERDE "d\t");
+            }
+            else
+            {
+                strcat(buffer, MAGENTA "f\t");
+            }
+
+            // INFORMACIÓN ACERCA DE PERMISOS
+            if (inodo.permisos & 4)
+                strcat(buffer, "r");
+            else
+                strcat(buffer, "-");
+            if (inodo.permisos & 2)
+                strcat(buffer, "w");
+            else
+                strcat(buffer, "-");
+            if (inodo.permisos & 1)
+                strcat(buffer, "x");
+            else
+                strcat(buffer, "-");
+
+            strcat(buffer, "\t");
+
+            // INFORMACIÓN ACERCA DEL TIEMPO
+            tm = localtime(&inodo.mtime);
+            sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+            strcat(buffer, tmp);
+            strcat(buffer, "\t");
+
+            // INFORMACIÓN ACERCA DEL TAMAÑO
+            sprintf(tamEnBytes, "%d", inodo.tamEnBytesLog);
+            strcat(buffer, tamEnBytes);
+            strcat(buffer, "\t");
+
+            // INFORMACIÓN ACERCA DEL NOMBRE
+            strcat(buffer, entradas[i % (BLOCKSIZE / sizeof(struct entrada))].nombre);
+
+            while ((strlen(buffer) % TAMFILA) != 0)
+            {
+                strcat(buffer, " ");
+            }
+
+            strcat(buffer, RESET "\n");
+
+            if (offset % (BLOCKSIZE / sizeof(struct entrada)) == 0)
+            {
+                offset += mi_read_f(p_inodo, entradas, offset, BLOCKSIZE);
+            }
+        }
+    }
+    else
+    {
+        mi_read_f(p_inodo_dir, &entrada, p_entrada * sizeof(struct entrada), sizeof(struct entrada));
+        leer_inodo(entrada.ninodo, &inodo);
+        strcat(buffer, MAGENTA "f\t");
 
         // INFORMACIÓN ACERCA DE PERMISOS
         if (inodo.permisos & 4)
@@ -316,20 +386,19 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         strcat(buffer, "\t\t\t");
 
         // INFORMACIÓN ACERCA DEL TAMAÑO
+        sprintf(tamEnBytes, "%d", inodo.tamEnBytesLog);
+        strcat(buffer, tamEnBytes);
+        strcat(buffer, "\t");
 
         // INFORMACIÓN ACERCA DEL NOMBRE
-        memset(entrada.nombre, 0, sizeof(entrada.nombre));
+        strcat(buffer, entrada.nombre);
 
-        if (mi_read_f(p_inodo, &entrada, totalentradas * sizeof(struct entrada), sizeof(struct entrada)) < 0)
+        while ((strlen(buffer) % TAMFILA) != 0)
         {
-            return FALLO;
+            strcat(buffer, " ");
         }
-
-        strcat(buffer, entrada.nombre + '\t');
-        memset(entrada.nombre, 0, sizeof(entrada.nombre));
+        strcat(buffer, RESET "\n");
     }
-
-    strcat(buffer, RESET "\n");
 
     return totalentradas;
 }
@@ -341,7 +410,7 @@ int mi_chmod(const char *camino, unsigned char permisos)
     unsigned int p_entrada = 0;
     int error;
 
-    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 1, permisos)) < 0)
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, permisos)) < 0)
     {
         mostrar_error_buscar_entrada(error);
         return error;
