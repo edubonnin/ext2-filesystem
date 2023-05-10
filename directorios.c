@@ -234,13 +234,6 @@ int mi_creat(const char *camino, unsigned char permisos)
     }
 }
 
-/*  FALTA POR HACER en mi_dir()
-    * cuando se obtiene el nº de inodo asociado a cada entrada,
-    hay que leer el inodo correspondiente e incorporar al buffer los
-    datos de tal inodo que vayan a aparecer en el listado.
-    * aportar información de color al buffer en función de si
-    es fichero o directorio
-*/
 int mi_dir(const char *camino, char *buffer, char tipo)
 {
     struct entrada entrada;
@@ -249,7 +242,7 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
     int totalentradas, error;
 
-    char tmp[TAMFILA], *tamaño;
+    char tmp[TAMFILA];
     char tamEnBytes[10];
 
     unsigned int p_inodo_dir = 0;
@@ -284,14 +277,11 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
     if (inodo.tipo == 'd')
     {
-        if (leer_inodo(p_inodo, &inodo) == FALLO)
-        {
-            return FALLO;
-        }
         struct entrada entradas[BLOCKSIZE / sizeof(struct entrada)];
         memset(&entradas, 0, sizeof(struct entrada));
         totalentradas = inodo.tamEnBytesLog / sizeof(struct entrada);
-        int offset = 0;
+
+        int offset;
         if (offset = mi_read_f(p_inodo, entradas, 0, BLOCKSIZE) < 0)
         {
             return FALLO;
@@ -343,12 +333,6 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
             // INFORMACIÓN ACERCA DEL NOMBRE
             strcat(buffer, entradas[i % (BLOCKSIZE / sizeof(struct entrada))].nombre);
-
-            while ((strlen(buffer) % TAMFILA) != 0)
-            {
-                strcat(buffer, " ");
-            }
-
             strcat(buffer, RESET "\n");
 
             if (offset % (BLOCKSIZE / sizeof(struct entrada)) == 0)
@@ -359,6 +343,8 @@ int mi_dir(const char *camino, char *buffer, char tipo)
     }
     else
     {
+        // SI SE EJECUTA EL COMANDO SOBRE UN FICHERO, SÓLO HABRÁ UNA ENTRADA
+        totalentradas = 1;
         mi_read_f(p_inodo_dir, &entrada, p_entrada * sizeof(struct entrada), sizeof(struct entrada));
         leer_inodo(entrada.ninodo, &inodo);
         strcat(buffer, MAGENTA "f\t");
@@ -383,7 +369,7 @@ int mi_dir(const char *camino, char *buffer, char tipo)
         tm = localtime(&inodo.mtime);
         sprintf(tmp, "%d-%02d-%02d %02d:%02d:%02d", tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
         strcat(buffer, tmp);
-        strcat(buffer, "\t\t\t");
+        strcat(buffer, "\t");
 
         // INFORMACIÓN ACERCA DEL TAMAÑO
         sprintf(tamEnBytes, "%d", inodo.tamEnBytesLog);
@@ -392,11 +378,6 @@ int mi_dir(const char *camino, char *buffer, char tipo)
 
         // INFORMACIÓN ACERCA DEL NOMBRE
         strcat(buffer, entrada.nombre);
-
-        while ((strlen(buffer) % TAMFILA) != 0)
-        {
-            strcat(buffer, " ");
-        }
         strcat(buffer, RESET "\n");
     }
 
