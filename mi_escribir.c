@@ -2,7 +2,8 @@
 
 int main(int argc, char const *argv[])
 {
-    if(argc != 5){
+    if (argc != 5)
+    {
         fprintf(stderr, ROJO "Sintaxis: ./mi_escribir <disco> </ruta_fichero> <texto> <offset>\n" RESET);
         return FALLO;
     }
@@ -14,7 +15,14 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    int bytesEscritos = mi_write(argv[2], argv[3], argv[4], strlen(argv[3]));
+    printf("longitud texto: %ld\n", strlen(argv[3]));
+
+    int bytesEscritos = mi_write(argv[2], argv[3], atoi(argv[4]), strlen(argv[3]));
+    if (bytesEscritos < 0)
+    {
+        bytesEscritos = 0;
+    }
+
     printf("Bytes escritos: %d\n", bytesEscritos);
 
     // DESMONTA EL DISPOSITIVO VIRTUAL
@@ -24,5 +32,4 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
     return EXITO;
-
 }

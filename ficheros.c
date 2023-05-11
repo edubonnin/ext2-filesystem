@@ -12,9 +12,10 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
     int desp1;
     int desp2;
     int bytesEscritos = 0;
-
+    // comprobación permsos de escritura
     if ((inodo.permisos & 2) != 2)
     {
+        fprintf(stderr, ROJO "No hay permisos de escritura\n" RESET);
         return FALLO;
     }
 

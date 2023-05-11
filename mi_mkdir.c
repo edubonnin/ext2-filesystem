@@ -15,7 +15,7 @@ int main(int argc, char const *argv[])
 
     if (argv[3][strlen(argv[3]) - 1] != '/') // SI LA RUTA ES UN FICHERO, DEVOLVEMOS ERROR
     {
-        fprintf(stderr, ROJO "Error: No es un directorio.\n" RESET, permisos);
+        fprintf(stderr, ROJO "Error: No es un directorio.\n" RESET);
         return FALLO;
     }
 

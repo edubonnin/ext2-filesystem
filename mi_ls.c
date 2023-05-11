@@ -5,7 +5,7 @@
 int main(int argc, char const *argv[])
 {
     char buffer[TAMBUFFER], tipo;
-    memset(buffer, 0, sizeof(TAMBUFFER));
+    memset(buffer, 0, sizeof(buffer));
     int total;
 
     // COMPROBACIÓN SINTAXIS
