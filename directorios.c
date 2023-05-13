@@ -453,3 +453,165 @@ int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nby
     // DEVUELVE EL NUMERO DE BYTES LEIDOS
     return mi_read_f(p_inodo, buf, offset, nbytes);
 }
+
+int mi_link(const char *camino1, const char *camino2)
+{
+    struct inodo inodo;
+    struct entrada entrada;
+
+    unsigned int p_inodo_dir1 = 0;
+    unsigned int p_inodo1 = 0;
+    unsigned int p_entrada1 = 0;
+
+    unsigned int p_inodo_dir2 = 0;
+    unsigned int p_inodo2 = 0;
+    unsigned int p_entrada2 = 0;
+
+    int error;
+
+    // COMPROBAMOS QUE camino1 EXISTE Y OBTENEMOS p_inodo1
+    if ((error = buscar_entrada(camino1, &p_inodo_dir1, &p_inodo1, &p_entrada1, 0, 4)) < 0)
+    {
+        mostrar_error_buscar_entrada(error);
+        return FALLO;
+    }
+
+    if (leer_inodo(p_inodo1, &inodo) == FALLO)
+    {
+        return FALLO;
+    }
+
+    // COMPROBAMOS QUE EL INODO ASOCIADO TIENE PERMISOS DE LECTURA
+    if ((inodo.permisos & 4) != 4)
+    {
+        fprintf(stderr, ROJO "Inodo asociado a camino1 no tiene permisos de lectura\n" RESET);
+        return FALLO;
+    }
+
+    // DEVOLVEMOS ERROR SI NO SE REFIERE A UN FICHERO
+    if (inodo.tipo != 'f')
+    {
+        fprintf(stderr, ROJO "camino1 no es un fichero\n" RESET);
+        return FALLO;
+    }
+
+    // CREAMOS LA ENTRADA DE camino2
+    if ((error = buscar_entrada(camino2, &p_inodo_dir2, &p_inodo2, &p_entrada2, 1, 6)) < 0)
+    {
+        mostrar_error_buscar_entrada(error);
+        return FALLO;
+    }
+
+    // LECTURA DE LA ENTRADA p_entrada2 DE p_inodo_dir2
+    if (mi_read_f(p_inodo_dir2, &entrada, p_entrada2 * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
+    {
+        return FALLO;
+    }
+
+    // CREACIÓN ENLACE
+    entrada.ninodo = p_inodo1;
+
+    // ESCRITURA ENTRADA MODIFICADA
+    if (mi_write_f(p_inodo_dir2, &entrada, p_entrada2 * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
+    {
+        return FALLO;
+    }
+
+    // LIBERAMOS EL INODO QUE SE HA ASOCIADO A LA ENTRADA CREADA
+    if (liberar_inodo(p_inodo2) == FALLO)
+    {
+        return FALLO;
+    }
+
+    // ACTUALIZAMOS Y SALVAMOS p_inodo1
+    inodo.nlinks++;
+    inodo.ctime = time(NULL);
+    if (escribir_inodo(p_inodo1, &inodo) == FALLO)
+    {
+        return FALLO;
+    }
+
+    return EXITO;
+}
+
+int mi_unlink(const char *camino)
+{
+    struct inodo inodo;
+    struct inodo inodo_dir;
+
+    unsigned int p_inodo_dir = 0;
+    unsigned int p_inodo = 0;
+    unsigned int p_entrada = 0;
+
+    int error, nEntradasInodoDir;
+
+    // NO SE HA DE PODER BORRAR EL DIRECTORIO RAÍZ
+    if (!strcmp(camino, "/"))
+    {
+        fprintf(stderr, ROJO "No se puede borrar el direcotrio raíz\n" RESET);
+        return FALLO;
+    }
+
+    // COMPROBAMOS QUE LA ENTRADA A CAMINO EXISTE Y OBTENEMOS SU NÚMERO DE ENTRADA p_entrada
+    if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4)) < 0)
+    {
+        mostrar_error_buscar_entrada(error);
+        return FALLO;
+    }
+
+    if (leer_inodo(p_inodo, &inodo) == FALLO)
+    {
+        return FALLO;
+    }
+
+    if (inodo.tipo == 'd' && inodo.tamEnBytesLog > 0) // SI SE TRATA DE UN DIRECTORIO Y NO ESTÁ VACÍO
+    {
+        fprintf(stderr, ROJO "Error: El directorio %s no está vacío\n" RESET, camino);
+        return FALLO;
+    }
+
+    // LEEMOS EL INODO ASOCIADO AL DIRECTORIO QUE CONTIENE LA ENTRADA A ELIMINAR, Y OBTENMOS SU nEntradas
+    if (leer_inodo(p_inodo_dir, &inodo_dir) == FALLO)
+    {
+        return FALLO;
+    }
+    nEntradasInodoDir = inodo_dir.tamEnBytesLog / sizeof(struct entrada);
+
+    if (p_entrada != nEntradasInodoDir - 1)
+    {
+
+        struct entrada entrada;
+        if (mi_read_f(p_inodo_dir, &entrada, (nEntradasInodoDir - 1) * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
+        {
+            return FALLO;
+        }
+        if (mi_write_f(p_inodo_dir, &entrada, p_entrada * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
+        {
+            return FALLO;
+        }
+    }
+    if (mi_truncar_f(p_inodo_dir, sizeof(struct entrada) * (nEntradasInodoDir - 1)) == FALLO)
+    {
+        return FALLO;
+    }
+
+    inodo.nlinks--;
+
+    if ((inodo.nlinks) == 0)
+    {
+        if (liberar_inodo(p_inodo) == FALLO)
+        {
+            return FALLO;
+        }
+    }
+    else
+    {
+        inodo.ctime = time(NULL);
+        if (escribir_inodo(p_inodo, &inodo) == FALLO)
+        {
+            return FALLO;
+        }
+    }
+
+    return EXITO;
+}

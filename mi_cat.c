@@ -17,7 +17,7 @@ int main(int argc, char const *argv[])
     // COMPROBAMOS QUE SE TRATA DE UNA RUTA QUE ES UN FICHERO Y NO UN DIRECTORIO
     if ((argv[2][strlen(argv[2]) - 1]) == '/')
     {
-        fprintf(stderr, "mi_cat.c: La ruta no se trata de un fichero.\n");
+        fprintf(stderr, ROJO "mi_cat.c: La ruta no se trata de un fichero.\n" RESET);
         return FALLO;
     }
 
@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     while (bytesLeidos > 0)
     {
         totalBytesLeidos += bytesLeidos;
-        write(1, buffer, bytesLeidos);
+        write(0, buffer, bytesLeidos); // ESCRIBE EN LA SALIDA ESTÁNDAR (stdout)
         memset(buffer, 0, sizeof(buffer));
         offset += tambuffer;
         bytesLeidos = mi_read(argv[2], buffer, offset, sizeof(buffer));
@@ -44,7 +44,7 @@ int main(int argc, char const *argv[])
         mostrar_error_buscar_entrada(totalBytesLeidos);
         bytesLeidos = 0;
     }
-    printf("Total_leidos: %d\n", totalBytesLeidos);
+    printf("\n\nTotal_leidos %d\n", totalBytesLeidos);
 
     // SE DESMONTA EL DISPOSITIVO
     if (bumount() == FALLO)

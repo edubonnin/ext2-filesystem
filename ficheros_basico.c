@@ -4,7 +4,7 @@
 
 #define DEBUGN3 0 // DEBUGGER DE leer_bit()
 #define DEBUGN4 0 // DEBUGGER DE traducir_bloque_inodo()
-#define DEBUGN6 1 // DEBUGGER DE liberar_bloques_inodo()
+#define DEBUGN6 0 // DEBUGGER DE liberar_bloques_inodo()
 
 // CALCULA EL TAMAÑO EN BLOQUES DEL MAPA DE BITS
 int tamMB(unsigned int nbloques)
