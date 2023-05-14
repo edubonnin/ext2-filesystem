@@ -33,7 +33,7 @@ int main(int argc, char const *argv[])
     while (bytesLeidos > 0)
     {
         totalBytesLeidos += bytesLeidos;
-        write(0, buffer, bytesLeidos); // ESCRIBE EN LA SALIDA ESTÁNDAR (stdout)
+        write(1, buffer, bytesLeidos); // ESCRIBE EN LA SALIDA ESTÁNDAR (stdout)
         memset(buffer, 0, sizeof(buffer));
         offset += tambuffer;
         bytesLeidos = mi_read(argv[2], buffer, offset, sizeof(buffer));
@@ -44,7 +44,9 @@ int main(int argc, char const *argv[])
         mostrar_error_buscar_entrada(totalBytesLeidos);
         bytesLeidos = 0;
     }
-    printf("\n\nTotal_leidos %d\n", totalBytesLeidos);
+
+    // IMPRIMIMOS RESULTADO POR EL stderr PARA EVITAR POSIBLES REDIRECCIONES A FICHEROS
+    fprintf(stderr, "\n\nTotal_leidos %d\n", totalBytesLeidos);
 
     // SE DESMONTA EL DISPOSITIVO
     if (bumount() == FALLO)
