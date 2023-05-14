@@ -1,3 +1,5 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
+
 #include "ficheros.h"
 
 #define TAMNOMBRE 60 // tamaño del nombre de directorio o fichero, en Ext2 = 256

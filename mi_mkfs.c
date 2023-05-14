@@ -10,7 +10,7 @@ int main(int argc, char **argv)
 
     if (argc != 3)
     {
-        fprintf(stderr, ROJO"ERROR: Numero de parametros incorrecto. (Correcto: ./mi_mkfs <nombre_dispositivo> <nbloques>)\n"RESET);
+        fprintf(stderr, ROJO "ERROR: Numero de parametros incorrecto. (Correcto: ./mi_mkfs <nombre_dispositivo> <nbloques>)\n" RESET);
     }
     else
     {
