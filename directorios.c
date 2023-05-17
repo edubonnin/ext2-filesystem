@@ -217,6 +217,7 @@ void mostrar_error_buscar_entrada(int error)
 
 int mi_creat(const char *camino, unsigned char permisos)
 {
+    mi_waitSem();
     unsigned int p_inodo_dir = 0;
     unsigned int p_inodo = 0;
     unsigned int p_entrada = 0;
@@ -224,12 +225,12 @@ int mi_creat(const char *camino, unsigned char permisos)
 
     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 1, permisos)) < 0)
     {
+        mi_signalSem();
         return error;
     }
-    else
-    {
-        return EXITO;
-    }
+
+    mi_signalSem();
+    return EXITO;
 }
 
 int mi_dir(const char *camino, char *buffer, char tipo)
@@ -418,19 +419,20 @@ int mi_stat(const char *camino, struct STAT *p_stat)
 // FUNCION NECESARA PARA EL mi_escribir.c
 int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned int nbytes)
 {
+    mi_waitSem();
     unsigned int p_inodo_dir = 0;
     unsigned int p_inodo = 0;
     unsigned int p_entrada = 0;
 
     int error;
-
     // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, '0', 0)) < 0)
     { // reservar = 1 ya que se tiene que escribir !!!!!!(revisar)!!!!!!
         mostrar_error_buscar_entrada(error);
+        mi_signalSem();
         return FALLO;
     }
-
+    mi_signalSem();
     // DEVUELVE EL NUMERO DE BYTES ESCRITOS
     return mi_write_f(p_inodo, buf, offset, nbytes);
 }
@@ -456,6 +458,7 @@ int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nby
 
 int mi_link(const char *camino1, const char *camino2)
 {
+    mi_waitSem();
     struct inodo inodo;
     struct entrada entrada;
 
@@ -473,11 +476,13 @@ int mi_link(const char *camino1, const char *camino2)
     if ((error = buscar_entrada(camino1, &p_inodo_dir1, &p_inodo1, &p_entrada1, 0, 4)) < 0)
     {
         mostrar_error_buscar_entrada(error);
+        mi_signalSem();
         return FALLO;
     }
 
     if (leer_inodo(p_inodo1, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
@@ -485,6 +490,7 @@ int mi_link(const char *camino1, const char *camino2)
     if ((inodo.permisos & 4) != 4)
     {
         fprintf(stderr, ROJO "Inodo asociado a camino1 no tiene permisos de lectura\n" RESET);
+        mi_signalSem();
         return FALLO;
     }
 
@@ -492,6 +498,7 @@ int mi_link(const char *camino1, const char *camino2)
     if (inodo.tipo != 'f')
     {
         fprintf(stderr, ROJO "camino1 no es un fichero\n" RESET);
+        mi_signalSem();
         return FALLO;
     }
 
@@ -499,12 +506,14 @@ int mi_link(const char *camino1, const char *camino2)
     if ((error = buscar_entrada(camino2, &p_inodo_dir2, &p_inodo2, &p_entrada2, 1, 6)) < 0)
     {
         mostrar_error_buscar_entrada(error);
+        mi_signalSem();
         return FALLO;
     }
 
     // LECTURA DE LA ENTRADA p_entrada2 DE p_inodo_dir2
     if (mi_read_f(p_inodo_dir2, &entrada, p_entrada2 * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
@@ -514,12 +523,14 @@ int mi_link(const char *camino1, const char *camino2)
     // ESCRITURA ENTRADA MODIFICADA
     if (mi_write_f(p_inodo_dir2, &entrada, p_entrada2 * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
     // LIBERAMOS EL INODO QUE SE HA ASOCIADO A LA ENTRADA CREADA
     if (liberar_inodo(p_inodo2) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
@@ -528,14 +539,17 @@ int mi_link(const char *camino1, const char *camino2)
     inodo.ctime = time(NULL);
     if (escribir_inodo(p_inodo1, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
+    mi_signalSem();
     return EXITO;
 }
 
 int mi_unlink(const char *camino)
 {
+    mi_waitSem();
     struct inodo inodo;
     struct inodo inodo_dir;
 
@@ -549,30 +563,34 @@ int mi_unlink(const char *camino)
     if (!strcmp(camino, "/"))
     {
         fprintf(stderr, ROJO "No se puede borrar el direcotrio raíz\n" RESET);
+        mi_signalSem();
         return FALLO;
     }
-
     // COMPROBAMOS QUE LA ENTRADA A CAMINO EXISTE Y OBTENEMOS SU NÚMERO DE ENTRADA p_entrada
     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, 0, 4)) < 0)
     {
         mostrar_error_buscar_entrada(error);
+        mi_signalSem();
         return FALLO;
     }
 
     if (leer_inodo(p_inodo, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
     if (inodo.tipo == 'd' && inodo.tamEnBytesLog > 0) // SI SE TRATA DE UN DIRECTORIO Y NO ESTÁ VACÍO
     {
         fprintf(stderr, ROJO "Error: El directorio %s no está vacío\n" RESET, camino);
+        mi_signalSem();
         return FALLO;
     }
 
     // LEEMOS EL INODO ASOCIADO AL DIRECTORIO QUE CONTIENE LA ENTRADA A ELIMINAR, Y OBTENMOS SU nEntradas
     if (leer_inodo(p_inodo_dir, &inodo_dir) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
     nEntradasInodoDir = inodo_dir.tamEnBytesLog / sizeof(struct entrada);
@@ -583,15 +601,18 @@ int mi_unlink(const char *camino)
         struct entrada entrada;
         if (mi_read_f(p_inodo_dir, &entrada, (nEntradasInodoDir - 1) * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
         {
+            mi_signalSem();
             return FALLO;
         }
         if (mi_write_f(p_inodo_dir, &entrada, p_entrada * sizeof(struct entrada), sizeof(struct entrada)) == FALLO)
         {
+            mi_signalSem();
             return FALLO;
         }
     }
     if (mi_truncar_f(p_inodo_dir, sizeof(struct entrada) * (nEntradasInodoDir - 1)) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
@@ -601,6 +622,7 @@ int mi_unlink(const char *camino)
     {
         if (liberar_inodo(p_inodo) == FALLO)
         {
+            mi_signalSem();
             return FALLO;
         }
     }
@@ -609,9 +631,11 @@ int mi_unlink(const char *camino)
         inodo.ctime = time(NULL);
         if (escribir_inodo(p_inodo, &inodo) == FALLO)
         {
+            mi_signalSem();
             return FALLO;
         }
     }
 
+    mi_signalSem();
     return EXITO;
 }
