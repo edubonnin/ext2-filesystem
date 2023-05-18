@@ -1,5 +1,7 @@
 // RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
+#include "simulacion.h"
+
 //  En el main() asociar la señal SIGCHLD al enterrador.
 //  Comprobar la sintaxis del comando.  // uso: ./simulacion <disco>
 //  Montar el dispositivo virtual.  //padre
