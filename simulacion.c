@@ -26,6 +26,7 @@ int main(int argc, char const *argv[])
     }
 
     // Creación del directorio
+    char camino[19] = "/simul_";
     time_t hora_act;
     time(&hora_act);
     struct tm *tm = localtime(&hora_act);
@@ -43,13 +44,14 @@ int main(int argc, char const *argv[])
         if (pid == 0)
         {
             bmount(argv[1]);
+
             // Creamos el directorio del hijo
             char camino_hijo[15];
             sprintf(camino_hijo, "/proceso_%d/", getpid());
             strcat(camino, camino_hijo);
-
             if (mi_creat(camino_hijo, 7) != EXITO)
             {
+                bumount();
                 return FALLO;
             }
 
@@ -57,8 +59,10 @@ int main(int argc, char const *argv[])
             strcat(camino, camino_fichero);
             if (mi_creat(camino, 7) != EXITO)
             {
+                bumount();
                 return FALLO;
             }
+
             srand(time(NULL) + getpid());
             for (size_t nescritura = 1; nescritura <= NUMESCRITURAS; nescritura++)
             {
@@ -67,26 +71,26 @@ int main(int argc, char const *argv[])
                 registro.pid = getpid();
                 registro.nEscritura = nescritura;
                 registro.nRegistro = rand() % REGMAX;
-                mi_write(strcat(camino_hijo, camino_fichero[1]), registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
-                sleep(0.05);
+                mi_write(camino, registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
+                usleep(50000);
             }
             // desmontar el dispositivos
-            if (bumount(argv[1]) == FALLO)
+            if (bumount() == FALLO)
             {
                 return FALLO;
             }
             exit(0);
         }
-        sleep(0.15);
+        usleep(150000);
     }
 
-    // esperamos  que todos los procesos terminen
+    // Permitir que el padre espere por todos los hijos
     while (acabados < NUMPROCESOS)
     {
         pause();
     }
 
-    // desmontamos el dispositivo virtual
+    // Desmontar el dispositivo
     if (bumount(argv[1]) == FALLO)
     {
         fprintf(stderr, ROJO "Error al desmontar el dispositivo virtual padre" RESET);
