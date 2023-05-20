@@ -21,40 +21,41 @@ int main(int argc, char const *argv[])
         return FALLO;
     }
 
-    //INICIALIZACION DEL BUFFER
+    // INICIALIZACION DEL BUFFER
     memset(buffer, 0, tambuffer);
     ninodo = atoi(argv[2]);
-    //MONTAR EL DISPOSITIVO
-    if (bmount(argv[1]) == -1)
+
+    // MONTAR EL DISPOSITIVO
+    if (bmount(argv[1]) == FALLO)
     {
         fprintf(stderr, "leer.c: Error al montar el dispositivo.\n");
         return FALLO;
     }
 
-    //LECTURA DEL SUPERBLOQUE
+    // LECTURA DEL SUPERBLOQUE
     if (bread(0, &SB) == FALLO)
     {
         fprintf(stderr, "leer.c: Error de lectura del superbloque.\n");
         return FALLO;
     }
 
-    //LECTURA DEL FICHERO HASTA LLEGAR AL FINAL
+    // LECTURA DEL FICHERO HASTA LLEGAR AL FINAL
     int auxBytesLeidos = mi_read_f(ninodo, buffer, offset, sizeof(buffer));
     while (auxBytesLeidos > 0)
     {
         bytesleidos += auxBytesLeidos;
-        //ESCRITURA DEL BUFFER
+        // ESCRITURA DEL BUFFER
         write(1, buffer, auxBytesLeidos);
-
-        //LIMPIEZA DEL BUFFER
+        
+        // LIMPIEZA DEL BUFFER
         memset(buffer, 0, tambuffer);
-        //ACTUALIZACIÓN DEL OFFSET
+        // ACTUALIZACIÓN DEL OFFSET
         offset += tambuffer;
-        //LECTURA
+        // LECTURA
         auxBytesLeidos = mi_read_f(ninodo, buffer, offset, sizeof(buffer));
     }
 
-    //LECTURA DEL INODO DEL ARCHIVO
+    // LECTURA DEL INODO DEL ARCHIVO
     if (leer_inodo(ninodo, &inodo))
     {
         fprintf(stderr, "Error con la lectura del inodo.\n");
@@ -71,5 +72,6 @@ int main(int argc, char const *argv[])
         fprintf(stderr, "leer.c: Error al desmonta el dispositivo virtual.\n");
         return FALLO;
     }
+
     return EXITO;
 }

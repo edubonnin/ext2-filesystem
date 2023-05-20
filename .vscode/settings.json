@@ -1,9 +1,0 @@
-{
-    "C_Cpp.errorSquiggles": "enabled",
-    "cmake.configureOnOpen": true,
-    "files.associations": {
-        "errno.h": "c",
-        "ficheros.h": "c",
-        "string.h": "c"
-    }
-}

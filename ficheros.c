@@ -2,8 +2,6 @@
 
 #include "ficheros.h"
 
-#define DEBUG 0
-
 int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offset, unsigned int nbytes)
 {
     struct inodo inodo;
@@ -14,9 +12,10 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
     int desp1;
     int desp2;
     int bytesEscritos = 0;
-
+    // comprobación permsos de escritura
     if ((inodo.permisos & 2) != 2)
     {
+        fprintf(stderr, ROJO "No hay permisos de escritura\n" RESET);
         return FALLO;
     }
 
@@ -93,6 +92,7 @@ int mi_write_f(unsigned int ninodo, const void *buf_original, unsigned int offse
 
 int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsigned int nbytes)
 {
+
     // Declaraciones
     int primerBL;
     int ultimoBL;
@@ -103,7 +103,6 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
 
     char unsigned buf_bloque[BLOCKSIZE];
     struct inodo inodo;
-
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
         return bytesleidos;
@@ -197,7 +196,7 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         }
         bytesleidos += desp2 + 1;
     }
-
+    mi_waitSem();
     // LECTURA DEL INODO
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
@@ -210,22 +209,19 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     // ESCRITURA DEL INODO
     if (escribir_inodo(ninodo, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
     // Comprobar que no haya errores de escritura
     if (nbytes == bytesleidos)
     {
-#if DEBUG
-        printf("\tmi_read_f: BIEN\n");
-#endif
+        mi_signalSem();
         return bytesleidos;
     }
     else
     {
-#if DEBUG
-        printf("mi_read_f(): MAL\n\tnbytes:%i\n\tbytesleidos:%i\n", nbytes, bytesleidos);
-#endif
+        mi_signalSem();
         return FALLO;
     }
 }
@@ -252,22 +248,28 @@ int mi_stat_f(unsigned int ninodo, struct STAT *p_stat)
 
 int mi_chmod_f(unsigned int ninodo, unsigned char permisos)
 {
+    mi_waitSem();
     // LEEMOS EL INODO CORRESPONDIENTE
     struct inodo inodo;
+
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
 
     // CAMBIAMOS LOS PERMISOS Y ACTUALIZAMOS EL CTIME
+
     inodo.permisos = permisos;
     inodo.ctime = time(NULL);
 
     // ESCRIBIMOS EL INODO
     if (escribir_inodo(ninodo, &inodo) == FALLO)
     {
+        mi_signalSem();
         return FALLO;
     }
+    mi_signalSem();
     return EXITO;
 }
 
