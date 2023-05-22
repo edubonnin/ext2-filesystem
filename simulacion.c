@@ -2,7 +2,7 @@
 
 #include "simulacion.h"
 
-#define DEBUGN12 0
+#define DEBUGN12 1
 
 int acabados = 0;
 char camino_fichero[10] = "prueba.dat";
@@ -32,11 +32,12 @@ int main(int argc, char const *argv[])
     struct tm *tm = localtime(&hora_act);
     sprintf(camino + strlen(camino), "%d%02d%02d%02d%02d%02d/",
             tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
-    if (mi_creat(camino, 7) == FAILURE)
+    if (mi_creat(camino, 7) == FALLO)
     {
         fprintf(stderr, ROJO "./simulacion: Error al crear el directorio '%s'\n" RESET, camino);
         exit(0);
     }
+    printf("xddddd");
 
     for (size_t proceso = 1; proceso <= NUMPROCESOS; proceso++)
     {
@@ -49,7 +50,7 @@ int main(int argc, char const *argv[])
             char camino_hijo[15];
             sprintf(camino_hijo, "/proceso_%d/", getpid());
             strcat(camino, camino_hijo);
-            if (mi_creat(camino_hijo, 7) != EXITO)
+            if (mi_creat(camino_hijo, 7) == FALLO)
             {
                 bumount();
                 return FALLO;
@@ -57,7 +58,7 @@ int main(int argc, char const *argv[])
 
             // Creamos el fichero prueba.dat
             strcat(camino, camino_fichero);
-            if (mi_creat(camino, 7) != EXITO)
+            if (mi_creat(camino, 7) == FALLO)
             {
                 bumount();
                 return FALLO;
@@ -71,10 +72,14 @@ int main(int argc, char const *argv[])
                 registro.pid = getpid();
                 registro.nEscritura = nescritura;
                 registro.nRegistro = rand() % REGMAX;
-                mi_write(camino, registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
+                mi_write(camino, &registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
+#if DEBUGN12
+                fprintf(stderr, "[simulación.c → Escritura %ld en %s]\n", nescritura, camino);
+#endif
                 usleep(50000);
             }
-            // desmontar el dispositivos
+
+            // Desmontar dispositivos
             if (bumount() == FALLO)
             {
                 return FALLO;
@@ -106,27 +111,5 @@ void reaper()
     while ((ended = waitpid(-1, NULL, WNOHANG)) > 0)
     {
         acabados++;
-    }
-}
-
-void my_sleep(unsigned msec)
-{ // recibe tiempo en milisegundos
-    struct timespec req, rem;
-    int err;
-    req.tv_sec = msec / 1000;              // conversión a segundos
-    req.tv_nsec = (msec % 1000) * 1000000; // conversión a nanosegundos
-    while ((req.tv_sec != 0) || (req.tv_nsec != 0))
-    {
-        if (nanosleep(&req, &rem) == 0)
-            // rem almacena el tiempo restante si una llamada al sistema
-            // ha sido interrumpida por una señal
-            break;
-        err = errno;
-        // Interrupted; continue
-        if (err == EINTR)
-        {
-            req.tv_sec = rem.tv_sec;
-            req.tv_nsec = rem.tv_nsec;
-        }
     }
 }
