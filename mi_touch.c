@@ -9,7 +9,7 @@ int main(int argc, char const *argv[])
     // COMPROBACIÓN DE SINTAXIS
     if (argc != 4)
     {
-        fprintf(stderr, ROJO "Sintaxis: ./mi_mkdir <nombre_dispositivo> <permisos> </ruta_directorio/>\n" RESET);
+        fprintf(stderr, ROJO "Sintaxis: ./mi_touch <nombre_dispositivo> <permisos> </ruta_directorio/>\n" RESET);
         return FALLO;
     }
 
