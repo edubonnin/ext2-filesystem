@@ -1,6 +1,7 @@
 // RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
 
 #include "directorios.h"
+
 int main(int argc, char const *argv[])
 {
     struct STAT stat;

@@ -1,3 +1,5 @@
+// RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
+
 #include "directorios.h"
 
 #define tambuffer 1500

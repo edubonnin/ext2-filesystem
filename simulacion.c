@@ -2,12 +2,11 @@
 
 #include "simulacion.h"
 
-#define DEBUGN12 1
-
+#define DEBUGN12 0
 int acabados = 0;
-char camino_fichero[10] = "prueba.dat";
+char nombre_fichero[11] = "prueba.dat";
 
-int main(int argc, char const *argv[])
+int main(int argc, char *argv[])
 {
     // Asociamos la señal SIGCHLD al enterrador
     signal(SIGCHLD, reaper);
@@ -15,92 +14,87 @@ int main(int argc, char const *argv[])
     // Comprobación de sintaxis correcta
     if (argc != 2)
     {
-        fprintf(stderr, ROJO "Error de sintaxis\n" RESET);
-        return FALLO;
-    }
-    // Montar el dispositivo virtual
-    if (bmount(argv[1]) == FALLO)
-    {
-        fprintf(stderr, ROJO "Error al montar el dispositivo virtual padre" RESET);
+        fprintf(stderr, ROJO "Error de sintaxis: ./simulacion <disco>\n" RESET);
         return FALLO;
     }
 
+    // Montar el dispositivo virtual (padre)
+    if (bmount(argv[1]) == FALLO)
+    {
+        fprintf(stderr, ROJO "Error al montar el dispositivo virtual padre" RESET);
+        exit(0);
+    }
+
     // Creación del directorio
-    char camino[19] = "/simul_";
+    char camino[21] = "/simul_";
     time_t hora_act;
     time(&hora_act);
     struct tm *tm = localtime(&hora_act);
     sprintf(camino + strlen(camino), "%d%02d%02d%02d%02d%02d/",
             tm->tm_year + 1900, tm->tm_mon + 1, tm->tm_mday, tm->tm_hour, tm->tm_min, tm->tm_sec);
+
     if (mi_creat(camino, 7) == FALLO)
     {
-        fprintf(stderr, ROJO "./simulacion: Error al crear el directorio '%s'\n" RESET, camino);
-        exit(0);
+        fprintf(stderr, "./simulacion: Error al crear el directorio '%s'\n", camino);
+        return FALLO;
     }
-    printf("xddddd");
 
-    for (size_t proceso = 1; proceso <= NUMPROCESOS; proceso++)
+    pid_t pid;
+    for (int proceso = 1; proceso <= NUMPROCESOS; proceso++)
     {
-        int pid = fork();
-        if (pid == 0)
+        pid = fork();
+        if (pid == 0) // Es el hijo
         {
             bmount(argv[1]);
 
             // Creamos el directorio del hijo
-            char camino_hijo[15];
-            sprintf(camino_hijo, "/proceso_%d/", getpid());
-            strcat(camino, camino_hijo);
-            if (mi_creat(camino_hijo, 7) == FALLO)
+            char camino_hijo[38];
+            sprintf(camino_hijo, "%sproceso_%d/", camino, getpid());
+            // strcat(camino, camino_hijo);
+            if (mi_creat(camino_hijo, 7) < 0)
             {
                 bumount();
                 return FALLO;
             }
 
+            char camino_total[48];
+            sprintf(camino_total, "%sprueba.dat", camino_hijo);
             // Creamos el fichero prueba.dat
-            strcat(camino, camino_fichero);
-            if (mi_creat(camino, 7) == FALLO)
+            if (mi_creat(camino_total, 7) < 0)
             {
                 bumount();
                 return FALLO;
             }
 
             srand(time(NULL) + getpid());
-            for (size_t nescritura = 1; nescritura <= NUMESCRITURAS; nescritura++)
+            for (int nescritura = 1; nescritura <= NUMESCRITURAS; nescritura++)
             {
                 struct REGISTRO registro;
                 registro.fecha = time(NULL);
                 registro.pid = getpid();
                 registro.nEscritura = nescritura;
                 registro.nRegistro = rand() % REGMAX;
-                mi_write(camino, &registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
+                mi_write(camino_total, &registro, registro.nRegistro * sizeof(struct REGISTRO), sizeof(struct REGISTRO));
 #if DEBUGN12
-                fprintf(stderr, "[simulación.c → Escritura %ld en %s]\n", nescritura, camino);
+                fprintf(stderr, "[simulación.c → Escritura %i en %s]\n", nescritura, camino_total);
 #endif
                 usleep(50000);
             }
-
-            // Desmontar dispositivos
-            if (bumount() == FALLO)
-            {
-                return FALLO;
-            }
+            fprintf(stderr, "[Proceso %d: Completadas %d escrituras en %s]\n", proceso, NUMESCRITURAS, camino_total);
+            // Desmontar dispositivo hijo
+            bumount();
             exit(0);
         }
         usleep(150000);
     }
 
-    // Permitir que el padre espere por todos los hijos
+    // Permitir que el padre espere por todos los hijos:
     while (acabados < NUMPROCESOS)
     {
         pause();
     }
 
-    // Desmontar el dispositivo
-    if (bumount(argv[1]) == FALLO)
-    {
-        fprintf(stderr, ROJO "Error al desmontar el dispositivo virtual padre" RESET);
-        return FALLO;
-    }
+    bumount();
     exit(0);
 }
 

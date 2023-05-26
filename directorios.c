@@ -447,7 +447,7 @@ int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nby
 
     // BUSCA EL NUMERO DEL INODO SEGUN LA ENTRADA
     if ((error = buscar_entrada(camino, &p_inodo_dir, &p_inodo, &p_entrada, '0', 0)) < 0)
-    { // reservar = 0 ya que se tiene que leer!!!!!!(revisar)!!!!!!
+    {
         mostrar_error_buscar_entrada(error);
         return FALLO;
     }
