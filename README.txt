@@ -10,3 +10,5 @@ RUBÉN BALLESTEROS JIMÉNEZ, EDUARDO BONNÍN NARVÁEZ, VICENÇ SERVERA FERRER
   información extendida de las entradas y aplicable directamente a ficheros
 
 * uso del mi_touch.c para crear ficheros
+
+* buffer de entradas en verificación
