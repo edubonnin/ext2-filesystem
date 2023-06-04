@@ -11,17 +11,17 @@ int main(int argc, char const *argv[])
     if (argc != 3)
     {
         fprintf(stderr, ROJO "Sintaxis: ./verificacion <nombre_dispositivo> <directorio_simulación>\n" RESET);
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     // Montamos el disco
-    if (bmount(argv[1]) == EXIT_FAILURE)
+    if (bmount(argv[1]) == FALLO)
     {
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
     struct STAT st;
-    mi_stat(argv[2], &st);
+    mi_stat(argv[2], &st); // Stat del inodo del directorio de simulación
 
 #if DEBUG
     fprintf(stderr, "Directorio de simulación: %s\n", argv[2]);
@@ -39,6 +39,7 @@ int main(int argc, char const *argv[])
     fprintf(stderr, "numentradas: %i, NUMPROCESOS: %i\n", numentradas, NUMPROCESOS);
 #endif
 
+    // Creación fichero informe.txt en el directorio de simulación
     char nfichero[100];
     sprintf(nfichero, "%s%s", argv[2], "informe.txt");
     if (mi_creat(nfichero, 7) < 0)
@@ -47,46 +48,46 @@ int main(int argc, char const *argv[])
         exit(0);
     }
 
-    // Cargamos las entradas
-    struct entrada entrs[numentradas];
-    int error = mi_read(argv[2], entrs, 0, sizeof(entrs));
-    if (error < 0)
+    // MEJORA ---> Lectura inicial de todas las entradas a un buffer
+    struct entrada entradas[numentradas];
+    int error;
+    if ((error = mi_read(argv[2], entradas, 0, sizeof(entradas))) < 0)
     {
         mostrar_error_buscar_entrada(error);
-        return EXIT_FAILURE;
+        return FALLO;
     }
 
-    int nbytes_info_f = 0;
+    int desplazamiento = 0;
     for (int nentr = 0; nentr < numentradas; nentr++)
     {
 
-        // Leemos la entrada de directorio y extraemos el pid a partir del nombre
-        //  de la entrada
-        pid_t pid = atoi(strchr(entrs[nentr].nombre, '_') + 1);
+        // Extracción del PID de la entrada
+        pid_t pid = atoi(strchr(entradas[nentr].nombre, '_') + 1);
         struct INFORMACION info;
-        info.pid = pid;
+        info.pid = pid; // Guardamos el pid en el registro info
         info.nEscrituras = 0;
 
-        char f_prueba[128];
-        sprintf(f_prueba, "%s%s/%s", argv[2], entrs[nentr].nombre, "prueba.dat");
+        char prueba_dat[128];
+        sprintf(prueba_dat, "%s%s/%s", argv[2], entradas[nentr].nombre, "prueba.dat");
 
-        // Buffer de N registros de escrituras
+        // Buffer de 256 registros
         int cant_registros_buffer_escrituras = 256;
         struct REGISTRO buffer_escrituras[cant_registros_buffer_escrituras];
         memset(buffer_escrituras, 0, sizeof(buffer_escrituras));
 
         int offset = 0;
+
         // Mientras haya escrituras en prueba.dat
-        while (mi_read(f_prueba, buffer_escrituras, offset, sizeof(buffer_escrituras)) > 0)
+        while (mi_read(prueba_dat, buffer_escrituras, offset, sizeof(buffer_escrituras)) > 0)
         {
 
             int nregistro = 0;
             while (nregistro < cant_registros_buffer_escrituras)
             {
-                // Si es valida
+                // Si la escritura es valida (coinciden los pid's)
                 if (buffer_escrituras[nregistro].pid == info.pid)
                 {
-                    // Si es la primera escritura validada
+                    // En caso de que sea la primera escritura que leemos almacenamos todos los valores
                     if (!info.nEscrituras)
                     {
                         info.MenorPosicion = buffer_escrituras[nregistro];
@@ -97,7 +98,8 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        // Actualizar datos de las fechas, la primera y la última escritura, si es necesario
+                        // En caso contrario, para cada escritura, cambiaremos los datos del buffer segun cada caso
+                        // Actualizacion de los datos (las fechas, la primera escritura y la última)
                         if ((difftime(buffer_escrituras[nregistro].fecha, info.PrimeraEscritura.fecha)) <= 0 &&
                             buffer_escrituras[nregistro].nEscritura < info.PrimeraEscritura.nEscritura)
                         {
@@ -126,9 +128,9 @@ int main(int argc, char const *argv[])
         }
 
 #if DEBUG
-        fprintf(stderr, "[%i) %i escrituras validadas en %s]\n", nentr + 1, info.nEscrituras, f_prueba);
+        fprintf(stderr, "[%i) %i escrituras validadas en %s]\n", nentr + 1, info.nEscrituras, prueba_dat);
 #endif
-        // Añadimos la informacion del struct info en el fichero
+        // Se añade la informacion del struct en el fichero
         char tiempoPrimero[100];
         char tiempoUltimo[100];
         char tiempoMenor[100];
@@ -191,12 +193,12 @@ int main(int argc, char const *argv[])
                 info.MayorPosicion.nEscritura,
                 info.MayorPosicion.nRegistro,
                 tiempoMayor);
-        // Escribimos en prueba.dat y actualizamos offset
-        if ((nbytes_info_f += mi_write(nfichero, &buffer, nbytes_info_f, strlen(buffer))) < 0)
+        // ESCRITURA EN EL FICHERO Y ACTUALIZACION DEL DESPALZAMIENTO
+        if ((desplazamiento += mi_write(nfichero, &buffer, desplazamiento, strlen(buffer))) < 0)
         {
             printf("verifiacion.c: Error al escribir el fichero: '%s'\n", nfichero);
             bumount();
-            return EXIT_FAILURE;
+            return FALLO;
         }
     }
     bumount();
