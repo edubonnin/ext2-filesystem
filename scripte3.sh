@@ -1,4 +1,3 @@
-rm res.txt
 make clean
 clear
 make

@@ -196,7 +196,6 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
         }
         bytesleidos += desp2 + 1;
     }
-    mi_waitSem();
     // LECTURA DEL INODO
     if (leer_inodo(ninodo, &inodo) == FALLO)
     {
@@ -209,19 +208,16 @@ int mi_read_f(unsigned int ninodo, void *buf_original, unsigned int offset, unsi
     // ESCRITURA DEL INODO
     if (escribir_inodo(ninodo, &inodo) == FALLO)
     {
-        mi_signalSem();
         return FALLO;
     }
 
     // Comprobar que no haya errores de escritura
     if (nbytes == bytesleidos)
     {
-        mi_signalSem();
         return bytesleidos;
     }
     else
     {
-        mi_signalSem();
         return FALLO;
     }
 }

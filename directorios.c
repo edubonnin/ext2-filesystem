@@ -439,6 +439,7 @@ int mi_write(const char *camino, const void *buf, unsigned int offset, unsigned 
 
 int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nbytes)
 {
+    mi_waitSem();
     unsigned int p_inodo_dir = 0;
     unsigned int p_inodo = 0;
     unsigned int p_entrada = 0;
@@ -453,6 +454,7 @@ int mi_read(const char *camino, void *buf, unsigned int offset, unsigned int nby
     }
 
     // DEVUELVE EL NUMERO DE BYTES LEIDOS
+    mi_signalSem();
     return mi_read_f(p_inodo, buf, offset, nbytes);
 }
 

@@ -1,0 +1,700 @@
+PID: 6454
+Numero de escrituras:	50
+Primera escritura:	1	438538	Mon 2023-06-05 12:46:03
+Ultima escritura:	50	314453	Mon 2023-06-05 12:46:06
+Menor posición:		23	7956	Mon 2023-06-05 12:46:04
+Mayor posición:		5	496199	Mon 2023-06-05 12:46:03
+
+PID: 6455
+Numero de escrituras:	49
+Primera escritura:	1	319964	Mon 2023-06-05 12:46:03
+Ultima escritura:	50	281307	Mon 2023-06-05 12:46:06
+Menor posición:		5	23661	Mon 2023-06-05 12:46:03
+Mayor posición:		17	497730	Mon 2023-06-05 12:46:04
+
+PID: 6456
+Numero de escrituras:	50
+Primera escritura:	1	69871	Mon 2023-06-05 12:46:03
+Ultima escritura:	50	406652	Mon 2023-06-05 12:46:06
+Menor posición:		42	12465	Mon 2023-06-05 12:46:05
+Mayor posición:		10	490390	Mon 2023-06-05 12:46:04
+
+PID: 6457
+Numero de escrituras:	50
+Primera escritura:	1	420013	Mon 2023-06-05 12:46:03
+Ultima escritura:	50	127543	Mon 2023-06-05 12:46:06
+Menor posición:		46	5387	Mon 2023-06-05 12:46:06
+Mayor posición:		11	439679	Mon 2023-06-05 12:46:04
+
+PID: 6458
+Numero de escrituras:	50
+Primera escritura:	1	207352	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	232558	Mon 2023-06-05 12:46:06
+Menor posición:		47	2055	Mon 2023-06-05 12:46:06
+Mayor posición:		22	491402	Mon 2023-06-05 12:46:05
+
+PID: 6460
+Numero de escrituras:	50
+Primera escritura:	1	251329	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	403124	Mon 2023-06-05 12:46:06
+Menor posición:		29	17070	Mon 2023-06-05 12:46:05
+Mayor posición:		27	488747	Mon 2023-06-05 12:46:05
+
+PID: 6461
+Numero de escrituras:	50
+Primera escritura:	1	483098	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	441101	Mon 2023-06-05 12:46:06
+Menor posición:		27	4886	Mon 2023-06-05 12:46:05
+Mayor posición:		35	484685	Mon 2023-06-05 12:46:06
+
+PID: 6462
+Numero de escrituras:	50
+Primera escritura:	1	111961	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	438544	Mon 2023-06-05 12:46:07
+Menor posición:		40	31716	Mon 2023-06-05 12:46:06
+Mayor posición:		43	486161	Mon 2023-06-05 12:46:06
+
+PID: 6463
+Numero de escrituras:	50
+Primera escritura:	1	39747	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	45366	Mon 2023-06-05 12:46:07
+Menor posición:		31	8137	Mon 2023-06-05 12:46:06
+Mayor posición:		16	482766	Mon 2023-06-05 12:46:05
+
+PID: 6464
+Numero de escrituras:	50
+Primera escritura:	1	83982	Mon 2023-06-05 12:46:04
+Ultima escritura:	50	369629	Mon 2023-06-05 12:46:07
+Menor posición:		12	14221	Mon 2023-06-05 12:46:05
+Mayor posición:		24	482126	Mon 2023-06-05 12:46:06
+
+PID: 6465
+Numero de escrituras:	50
+Primera escritura:	1	375122	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	494884	Mon 2023-06-05 12:46:07
+Menor posición:		37	36012	Mon 2023-06-05 12:46:06
+Mayor posición:		45	497984	Mon 2023-06-05 12:46:07
+
+PID: 6466
+Numero de escrituras:	50
+Primera escritura:	1	53083	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	70263	Mon 2023-06-05 12:46:07
+Menor posición:		10	7862	Mon 2023-06-05 12:46:05
+Mayor posición:		33	490699	Mon 2023-06-05 12:46:06
+
+PID: 6467
+Numero de escrituras:	50
+Primera escritura:	1	372785	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	276746	Mon 2023-06-05 12:46:07
+Menor posición:		48	29135	Mon 2023-06-05 12:46:07
+Mayor posición:		21	488248	Mon 2023-06-05 12:46:06
+
+PID: 6468
+Numero de escrituras:	50
+Primera escritura:	1	490626	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	93262	Mon 2023-06-05 12:46:07
+Menor posición:		45	1105	Mon 2023-06-05 12:46:07
+Mayor posición:		2	499620	Mon 2023-06-05 12:46:05
+
+PID: 6469
+Numero de escrituras:	50
+Primera escritura:	1	323661	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	481541	Mon 2023-06-05 12:46:08
+Menor posición:		5	1618	Mon 2023-06-05 12:46:05
+Mayor posición:		34	495492	Mon 2023-06-05 12:46:07
+
+PID: 6470
+Numero de escrituras:	50
+Primera escritura:	1	315339	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	235517	Mon 2023-06-05 12:46:08
+Menor posición:		16	2371	Mon 2023-06-05 12:46:06
+Mayor posición:		30	482713	Mon 2023-06-05 12:46:07
+
+PID: 6471
+Numero de escrituras:	50
+Primera escritura:	1	225267	Mon 2023-06-05 12:46:05
+Ultima escritura:	50	153300	Mon 2023-06-05 12:46:08
+Menor posición:		21	5923	Mon 2023-06-05 12:46:06
+Mayor posición:		8	487290	Mon 2023-06-05 12:46:06
+
+PID: 6472
+Numero de escrituras:	50
+Primera escritura:	1	49009	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	283638	Mon 2023-06-05 12:46:08
+Menor posición:		48	2939	Mon 2023-06-05 12:46:08
+Mayor posición:		11	495077	Mon 2023-06-05 12:46:06
+
+PID: 6474
+Numero de escrituras:	50
+Primera escritura:	1	218992	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	46654	Mon 2023-06-05 12:46:08
+Menor posición:		24	1903	Mon 2023-06-05 12:46:07
+Mayor posición:		8	498570	Mon 2023-06-05 12:46:06
+
+PID: 6475
+Numero de escrituras:	50
+Primera escritura:	1	135786	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	227694	Mon 2023-06-05 12:46:08
+Menor posición:		47	13555	Mon 2023-06-05 12:46:08
+Mayor posición:		15	497842	Mon 2023-06-05 12:46:06
+
+PID: 6476
+Numero de escrituras:	50
+Primera escritura:	1	338237	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	359336	Mon 2023-06-05 12:46:08
+Menor posición:		29	20828	Mon 2023-06-05 12:46:07
+Mayor posición:		30	490528	Mon 2023-06-05 12:46:07
+
+PID: 6477
+Numero de escrituras:	50
+Primera escritura:	1	110122	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	426512	Mon 2023-06-05 12:46:08
+Menor posición:		22	3562	Mon 2023-06-05 12:46:07
+Mayor posición:		28	494293	Mon 2023-06-05 12:46:07
+
+PID: 6478
+Numero de escrituras:	50
+Primera escritura:	1	267939	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	112576	Mon 2023-06-05 12:46:09
+Menor posición:		10	118	Mon 2023-06-05 12:46:06
+Mayor posición:		7	484940	Mon 2023-06-05 12:46:06
+
+PID: 6479
+Numero de escrituras:	50
+Primera escritura:	1	328643	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	492419	Mon 2023-06-05 12:46:09
+Menor posición:		46	4411	Mon 2023-06-05 12:46:08
+Mayor posición:		2	496489	Mon 2023-06-05 12:46:06
+
+PID: 6480
+Numero de escrituras:	50
+Primera escritura:	1	344249	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	393519	Mon 2023-06-05 12:46:09
+Menor posición:		8	1713	Mon 2023-06-05 12:46:07
+Mayor posición:		18	495845	Mon 2023-06-05 12:46:07
+
+PID: 6481
+Numero de escrituras:	50
+Primera escritura:	1	392249	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	399476	Mon 2023-06-05 12:46:09
+Menor posición:		10	6972	Mon 2023-06-05 12:46:07
+Mayor posición:		42	458126	Mon 2023-06-05 12:46:08
+
+PID: 6482
+Numero de escrituras:	50
+Primera escritura:	1	288685	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	264687	Mon 2023-06-05 12:46:09
+Menor posición:		41	29094	Mon 2023-06-05 12:46:08
+Mayor posición:		28	480489	Mon 2023-06-05 12:46:08
+
+PID: 6483
+Numero de escrituras:	50
+Primera escritura:	1	440337	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	418207	Mon 2023-06-05 12:46:09
+Menor posición:		43	17983	Mon 2023-06-05 12:46:08
+Mayor posición:		4	498516	Mon 2023-06-05 12:46:06
+
+PID: 6484
+Numero de escrituras:	50
+Primera escritura:	1	52322	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	72656	Mon 2023-06-05 12:46:09
+Menor posición:		17	6168	Mon 2023-06-05 12:46:07
+Mayor posición:		8	489464	Mon 2023-06-05 12:46:07
+
+PID: 6485
+Numero de escrituras:	50
+Primera escritura:	1	261926	Mon 2023-06-05 12:46:06
+Ultima escritura:	50	380349	Mon 2023-06-05 12:46:09
+Menor posición:		18	984	Mon 2023-06-05 12:46:07
+Mayor posición:		47	486164	Mon 2023-06-05 12:46:09
+
+PID: 6486
+Numero de escrituras:	50
+Primera escritura:	1	159816	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	462790	Mon 2023-06-05 12:46:09
+Menor posición:		24	1983	Mon 2023-06-05 12:46:08
+Mayor posición:		34	480502	Mon 2023-06-05 12:46:08
+
+PID: 6487
+Numero de escrituras:	50
+Primera escritura:	1	468221	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	478990	Mon 2023-06-05 12:46:09
+Menor posición:		12	4585	Mon 2023-06-05 12:46:07
+Mayor posición:		23	488202	Mon 2023-06-05 12:46:08
+
+PID: 6488
+Numero de escrituras:	50
+Primera escritura:	1	194525	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	373648	Mon 2023-06-05 12:46:09
+Menor posición:		40	43851	Mon 2023-06-05 12:46:09
+Mayor posición:		18	497268	Mon 2023-06-05 12:46:08
+
+PID: 6489
+Numero de escrituras:	50
+Primera escritura:	1	371059	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	157860	Mon 2023-06-05 12:46:09
+Menor posición:		42	30508	Mon 2023-06-05 12:46:09
+Mayor posición:		31	489947	Mon 2023-06-05 12:46:08
+
+PID: 6490
+Numero de escrituras:	50
+Primera escritura:	1	149751	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	81652	Mon 2023-06-05 12:46:09
+Menor posición:		10	21145	Mon 2023-06-05 12:46:07
+Mayor posición:		28	480932	Mon 2023-06-05 12:46:08
+
+PID: 6491
+Numero de escrituras:	50
+Primera escritura:	1	498057	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	228103	Mon 2023-06-05 12:46:10
+Menor posición:		4	16044	Mon 2023-06-05 12:46:07
+Mayor posición:		1	498057	Mon 2023-06-05 12:46:07
+
+PID: 6492
+Numero de escrituras:	50
+Primera escritura:	1	472685	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	363402	Mon 2023-06-05 12:46:10
+Menor posición:		18	132	Mon 2023-06-05 12:46:08
+Mayor posición:		45	493396	Mon 2023-06-05 12:46:09
+
+PID: 6493
+Numero de escrituras:	50
+Primera escritura:	1	157105	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	83025	Mon 2023-06-05 12:46:10
+Menor posición:		34	14815	Mon 2023-06-05 12:46:09
+Mayor posición:		12	491994	Mon 2023-06-05 12:46:08
+
+PID: 6494
+Numero de escrituras:	50
+Primera escritura:	1	60877	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	206492	Mon 2023-06-05 12:46:10
+Menor posición:		15	590	Mon 2023-06-05 12:46:08
+Mayor posición:		47	492668	Mon 2023-06-05 12:46:10
+
+PID: 6495
+Numero de escrituras:	50
+Primera escritura:	1	233316	Mon 2023-06-05 12:46:07
+Ultima escritura:	50	62009	Mon 2023-06-05 12:46:10
+Menor posición:		20	548	Mon 2023-06-05 12:46:08
+Mayor posición:		31	475258	Mon 2023-06-05 12:46:09
+
+PID: 6496
+Numero de escrituras:	50
+Primera escritura:	1	179591	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	216034	Mon 2023-06-05 12:46:10
+Menor posición:		34	9022	Mon 2023-06-05 12:46:09
+Mayor posición:		4	493388	Mon 2023-06-05 12:46:08
+
+PID: 6497
+Numero de escrituras:	50
+Primera escritura:	1	307397	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	252557	Mon 2023-06-05 12:46:10
+Menor posición:		46	3672	Mon 2023-06-05 12:46:10
+Mayor posición:		8	497465	Mon 2023-06-05 12:46:08
+
+PID: 6498
+Numero de escrituras:	50
+Primera escritura:	1	159126	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	153627	Mon 2023-06-05 12:46:10
+Menor posición:		11	539	Mon 2023-06-05 12:46:08
+Mayor posición:		40	485175	Mon 2023-06-05 12:46:10
+
+PID: 6499
+Numero de escrituras:	50
+Primera escritura:	1	312151	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	69818	Mon 2023-06-05 12:46:10
+Menor posición:		47	3008	Mon 2023-06-05 12:46:10
+Mayor posición:		26	484639	Mon 2023-06-05 12:46:09
+
+PID: 6500
+Numero de escrituras:	50
+Primera escritura:	1	484305	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	259644	Mon 2023-06-05 12:46:11
+Menor posición:		39	3906	Mon 2023-06-05 12:46:10
+Mayor posición:		8	495346	Mon 2023-06-05 12:46:08
+
+PID: 6501
+Numero de escrituras:	50
+Primera escritura:	1	428054	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	163131	Mon 2023-06-05 12:46:11
+Menor posición:		19	17481	Mon 2023-06-05 12:46:09
+Mayor posición:		35	493698	Mon 2023-06-05 12:46:10
+
+PID: 6502
+Numero de escrituras:	50
+Primera escritura:	1	219764	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	44081	Mon 2023-06-05 12:46:11
+Menor posición:		4	22544	Mon 2023-06-05 12:46:08
+Mayor posición:		45	491178	Mon 2023-06-05 12:46:10
+
+PID: 6503
+Numero de escrituras:	50
+Primera escritura:	1	144433	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	90371	Mon 2023-06-05 12:46:11
+Menor posición:		36	13996	Mon 2023-06-05 12:46:10
+Mayor posición:		49	485367	Mon 2023-06-05 12:46:11
+
+PID: 6504
+Numero de escrituras:	50
+Primera escritura:	1	161961	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	18041	Mon 2023-06-05 12:46:11
+Menor posición:		24	11635	Mon 2023-06-05 12:46:09
+Mayor posición:		10	486312	Mon 2023-06-05 12:46:09
+
+PID: 6505
+Numero de escrituras:	50
+Primera escritura:	1	241656	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	93120	Mon 2023-06-05 12:46:11
+Menor posición:		11	20812	Mon 2023-06-05 12:46:09
+Mayor posición:		41	495767	Mon 2023-06-05 12:46:10
+
+PID: 6507
+Numero de escrituras:	50
+Primera escritura:	1	179681	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	303789	Mon 2023-06-05 12:46:11
+Menor posición:		44	22504	Mon 2023-06-05 12:46:11
+Mayor posición:		15	481342	Mon 2023-06-05 12:46:09
+
+PID: 6508
+Numero de escrituras:	50
+Primera escritura:	1	147859	Mon 2023-06-05 12:46:08
+Ultima escritura:	50	168310	Mon 2023-06-05 12:46:11
+Menor posición:		19	23305	Mon 2023-06-05 12:46:09
+Mayor posición:		35	495020	Mon 2023-06-05 12:46:10
+
+PID: 6509
+Numero de escrituras:	50
+Primera escritura:	1	419398	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	202599	Mon 2023-06-05 12:46:11
+Menor posición:		48	937	Mon 2023-06-05 12:46:11
+Mayor posición:		49	495600	Mon 2023-06-05 12:46:11
+
+PID: 6510
+Numero de escrituras:	50
+Primera escritura:	1	129400	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	384837	Mon 2023-06-05 12:46:11
+Menor posición:		24	3266	Mon 2023-06-05 12:46:10
+Mayor posición:		10	489505	Mon 2023-06-05 12:46:09
+
+PID: 6511
+Numero de escrituras:	50
+Primera escritura:	1	327171	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	420786	Mon 2023-06-05 12:46:11
+Menor posición:		19	7754	Mon 2023-06-05 12:46:10
+Mayor posición:		35	489933	Mon 2023-06-05 12:46:10
+
+PID: 6512
+Numero de escrituras:	50
+Primera escritura:	1	228530	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	245	Mon 2023-06-05 12:46:11
+Menor posición:		50	245	Mon 2023-06-05 12:46:11
+Mayor posición:		48	498781	Mon 2023-06-05 12:46:11
+
+PID: 6513
+Numero de escrituras:	50
+Primera escritura:	1	170919	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	433452	Mon 2023-06-05 12:46:11
+Menor posición:		38	17093	Mon 2023-06-05 12:46:11
+Mayor posición:		41	490455	Mon 2023-06-05 12:46:11
+
+PID: 6514
+Numero de escrituras:	50
+Primera escritura:	1	197878	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	170162	Mon 2023-06-05 12:46:11
+Menor posición:		15	8801	Mon 2023-06-05 12:46:10
+Mayor posición:		16	497387	Mon 2023-06-05 12:46:10
+
+PID: 6515
+Numero de escrituras:	50
+Primera escritura:	1	406455	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	386900	Mon 2023-06-05 12:46:11
+Menor posición:		18	34321	Mon 2023-06-05 12:46:10
+Mayor posición:		17	497153	Mon 2023-06-05 12:46:10
+
+PID: 6516
+Numero de escrituras:	50
+Primera escritura:	1	442488	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	152717	Mon 2023-06-05 12:46:12
+Menor posición:		43	7942	Mon 2023-06-05 12:46:11
+Mayor posición:		36	495447	Mon 2023-06-05 12:46:11
+
+PID: 6517
+Numero de escrituras:	50
+Primera escritura:	1	155952	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	291211	Mon 2023-06-05 12:46:12
+Menor posición:		20	2637	Mon 2023-06-05 12:46:10
+Mayor posición:		35	487399	Mon 2023-06-05 12:46:11
+
+PID: 6518
+Numero de escrituras:	50
+Primera escritura:	1	473755	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	178743	Mon 2023-06-05 12:46:12
+Menor posición:		14	5053	Mon 2023-06-05 12:46:10
+Mayor posición:		2	499075	Mon 2023-06-05 12:46:09
+
+PID: 6519
+Numero de escrituras:	50
+Primera escritura:	1	195727	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	317109	Mon 2023-06-05 12:46:12
+Menor posición:		33	1645	Mon 2023-06-05 12:46:11
+Mayor posición:		14	497774	Mon 2023-06-05 12:46:10
+
+PID: 6520
+Numero de escrituras:	50
+Primera escritura:	1	428804	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	358103	Mon 2023-06-05 12:46:12
+Menor posición:		19	5286	Mon 2023-06-05 12:46:10
+Mayor posición:		45	494343	Mon 2023-06-05 12:46:12
+
+PID: 6521
+Numero de escrituras:	50
+Primera escritura:	1	176547	Mon 2023-06-05 12:46:09
+Ultima escritura:	50	172242	Mon 2023-06-05 12:46:12
+Menor posición:		29	10913	Mon 2023-06-05 12:46:11
+Mayor posición:		38	468757	Mon 2023-06-05 12:46:11
+
+PID: 6522
+Numero de escrituras:	50
+Primera escritura:	1	181044	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	260176	Mon 2023-06-05 12:46:12
+Menor posición:		16	3308	Mon 2023-06-05 12:46:10
+Mayor posición:		8	485822	Mon 2023-06-05 12:46:10
+
+PID: 6523
+Numero de escrituras:	50
+Primera escritura:	1	100980	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	186237	Mon 2023-06-05 12:46:12
+Menor posición:		26	6964	Mon 2023-06-05 12:46:11
+Mayor posición:		27	499372	Mon 2023-06-05 12:46:11
+
+PID: 6524
+Numero de escrituras:	50
+Primera escritura:	1	90837	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	421722	Mon 2023-06-05 12:46:12
+Menor posición:		40	839	Mon 2023-06-05 12:46:12
+Mayor posición:		27	487022	Mon 2023-06-05 12:46:11
+
+PID: 6525
+Numero de escrituras:	50
+Primera escritura:	1	480177	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	156159	Mon 2023-06-05 12:46:12
+Menor posición:		7	1670	Mon 2023-06-05 12:46:10
+Mayor posición:		1	480177	Mon 2023-06-05 12:46:10
+
+PID: 6526
+Numero de escrituras:	50
+Primera escritura:	1	418530	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	250508	Mon 2023-06-05 12:46:12
+Menor posición:		41	16069	Mon 2023-06-05 12:46:12
+Mayor posición:		37	498833	Mon 2023-06-05 12:46:12
+
+PID: 6527
+Numero de escrituras:	50
+Primera escritura:	1	491006	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	380643	Mon 2023-06-05 12:46:13
+Menor posición:		26	10472	Mon 2023-06-05 12:46:11
+Mayor posición:		43	495754	Mon 2023-06-05 12:46:12
+
+PID: 6528
+Numero de escrituras:	50
+Primera escritura:	1	61004	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	58585	Mon 2023-06-05 12:46:13
+Menor posición:		14	6066	Mon 2023-06-05 12:46:11
+Mayor posición:		46	496947	Mon 2023-06-05 12:46:12
+
+PID: 6529
+Numero de escrituras:	50
+Primera escritura:	1	451702	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	439802	Mon 2023-06-05 12:46:13
+Menor posición:		34	1531	Mon 2023-06-05 12:46:12
+Mayor posición:		44	493591	Mon 2023-06-05 12:46:12
+
+PID: 6530
+Numero de escrituras:	50
+Primera escritura:	1	403816	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	22477	Mon 2023-06-05 12:46:13
+Menor posición:		35	2568	Mon 2023-06-05 12:46:12
+Mayor posición:		27	494017	Mon 2023-06-05 12:46:12
+
+PID: 6531
+Numero de escrituras:	50
+Primera escritura:	1	2025	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	218505	Mon 2023-06-05 12:46:13
+Menor posición:		1	2025	Mon 2023-06-05 12:46:10
+Mayor posición:		35	470141	Mon 2023-06-05 12:46:12
+
+PID: 6532
+Numero de escrituras:	50
+Primera escritura:	1	256200	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	51653	Mon 2023-06-05 12:46:13
+Menor posición:		33	25230	Mon 2023-06-05 12:46:12
+Mayor posición:		36	496449	Mon 2023-06-05 12:46:12
+
+PID: 6533
+Numero de escrituras:	50
+Primera escritura:	1	75167	Mon 2023-06-05 12:46:10
+Ultima escritura:	50	324328	Mon 2023-06-05 12:46:13
+Menor posición:		33	39286	Mon 2023-06-05 12:46:12
+Mayor posición:		39	491952	Mon 2023-06-05 12:46:12
+
+PID: 6534
+Numero de escrituras:	50
+Primera escritura:	1	12120	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	438113	Mon 2023-06-05 12:46:13
+Menor posición:		31	3611	Mon 2023-06-05 12:46:12
+Mayor posición:		21	492899	Mon 2023-06-05 12:46:12
+
+PID: 6535
+Numero de escrituras:	50
+Primera escritura:	1	253178	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	68987	Mon 2023-06-05 12:46:13
+Menor posición:		43	13751	Mon 2023-06-05 12:46:13
+Mayor posición:		24	496568	Mon 2023-06-05 12:46:12
+
+PID: 6536
+Numero de escrituras:	50
+Primera escritura:	1	215576	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	190710	Mon 2023-06-05 12:46:13
+Menor posición:		3	881	Mon 2023-06-05 12:46:11
+Mayor posición:		9	489106	Mon 2023-06-05 12:46:11
+
+PID: 6537
+Numero de escrituras:	50
+Primera escritura:	1	30597	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	170085	Mon 2023-06-05 12:46:13
+Menor posición:		49	14309	Mon 2023-06-05 12:46:13
+Mayor posición:		14	485734	Mon 2023-06-05 12:46:11
+
+PID: 6538
+Numero de escrituras:	50
+Primera escritura:	1	443148	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	440808	Mon 2023-06-05 12:46:13
+Menor posición:		17	18736	Mon 2023-06-05 12:46:12
+Mayor posición:		33	499072	Mon 2023-06-05 12:46:13
+
+PID: 6539
+Numero de escrituras:	50
+Primera escritura:	1	86226	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	307751	Mon 2023-06-05 12:46:13
+Menor posición:		15	6031	Mon 2023-06-05 12:46:12
+Mayor posición:		41	467923	Mon 2023-06-05 12:46:13
+
+PID: 6540
+Numero de escrituras:	50
+Primera escritura:	1	348316	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	129106	Mon 2023-06-05 12:46:13
+Menor posición:		44	2459	Mon 2023-06-05 12:46:13
+Mayor posición:		26	499730	Mon 2023-06-05 12:46:12
+
+PID: 6541
+Numero de escrituras:	50
+Primera escritura:	1	107647	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	170197	Mon 2023-06-05 12:46:14
+Menor posición:		3	2873	Mon 2023-06-05 12:46:11
+Mayor posición:		40	470082	Mon 2023-06-05 12:46:13
+
+PID: 6542
+Numero de escrituras:	50
+Primera escritura:	1	359159	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	435019	Mon 2023-06-05 12:46:14
+Menor posición:		5	16293	Mon 2023-06-05 12:46:11
+Mayor posición:		37	496832	Mon 2023-06-05 12:46:13
+
+PID: 6543
+Numero de escrituras:	50
+Primera escritura:	1	420934	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	210963	Mon 2023-06-05 12:46:14
+Menor posición:		38	10187	Mon 2023-06-05 12:46:13
+Mayor posición:		14	479684	Mon 2023-06-05 12:46:12
+
+PID: 6544
+Numero de escrituras:	50
+Primera escritura:	1	305703	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	366596	Mon 2023-06-05 12:46:14
+Menor posición:		13	10686	Mon 2023-06-05 12:46:12
+Mayor posición:		8	472371	Mon 2023-06-05 12:46:12
+
+PID: 6545
+Numero de escrituras:	50
+Primera escritura:	1	423213	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	28430	Mon 2023-06-05 12:46:14
+Menor posición:		38	3730	Mon 2023-06-05 12:46:13
+Mayor posición:		16	497684	Mon 2023-06-05 12:46:12
+
+PID: 6546
+Numero de escrituras:	50
+Primera escritura:	1	481948	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	109667	Mon 2023-06-05 12:46:14
+Menor posición:		44	32301	Mon 2023-06-05 12:46:13
+Mayor posición:		38	486936	Mon 2023-06-05 12:46:13
+
+PID: 6548
+Numero de escrituras:	50
+Primera escritura:	1	709	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	200490	Mon 2023-06-05 12:46:14
+Menor posición:		1	709	Mon 2023-06-05 12:46:11
+Mayor posición:		15	484642	Mon 2023-06-05 12:46:12
+
+PID: 6549
+Numero de escrituras:	50
+Primera escritura:	1	82744	Mon 2023-06-05 12:46:11
+Ultima escritura:	50	145150	Mon 2023-06-05 12:46:14
+Menor posición:		13	11383	Mon 2023-06-05 12:46:12
+Mayor posición:		38	493107	Mon 2023-06-05 12:46:13
+
+PID: 6550
+Numero de escrituras:	50
+Primera escritura:	1	225431	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	291195	Mon 2023-06-05 12:46:14
+Menor posición:		32	11847	Mon 2023-06-05 12:46:13
+Mayor posición:		37	493787	Mon 2023-06-05 12:46:13
+
+PID: 6551
+Numero de escrituras:	50
+Primera escritura:	1	106084	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	129840	Mon 2023-06-05 12:46:14
+Menor posición:		15	5443	Mon 2023-06-05 12:46:12
+Mayor posición:		12	496951	Mon 2023-06-05 12:46:12
+
+PID: 6552
+Numero de escrituras:	50
+Primera escritura:	1	189034	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	56004	Mon 2023-06-05 12:46:14
+Menor posición:		10	8062	Mon 2023-06-05 12:46:12
+Mayor posición:		19	496686	Mon 2023-06-05 12:46:13
+
+PID: 6553
+Numero de escrituras:	50
+Primera escritura:	1	140652	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	86561	Mon 2023-06-05 12:46:14
+Menor posición:		42	16230	Mon 2023-06-05 12:46:14
+Mayor posición:		30	493144	Mon 2023-06-05 12:46:13
+
+PID: 6554
+Numero de escrituras:	50
+Primera escritura:	1	251658	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	29946	Mon 2023-06-05 12:46:14
+Menor posición:		43	22040	Mon 2023-06-05 12:46:14
+Mayor posición:		22	484428	Mon 2023-06-05 12:46:13
+
+PID: 6555
+Numero de escrituras:	50
+Primera escritura:	1	495219	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	181006	Mon 2023-06-05 12:46:15
+Menor posición:		30	29293	Mon 2023-06-05 12:46:14
+Mayor posición:		35	499665	Mon 2023-06-05 12:46:14
+
+PID: 6556
+Numero de escrituras:	50
+Primera escritura:	1	259434	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	113712	Mon 2023-06-05 12:46:15
+Menor posición:		39	27372	Mon 2023-06-05 12:46:14
+Mayor posición:		38	478640	Mon 2023-06-05 12:46:14
+
+PID: 6557
+Numero de escrituras:	50
+Primera escritura:	1	409808	Mon 2023-06-05 12:46:12
+Ultima escritura:	50	386745	Mon 2023-06-05 12:46:15
+Menor posición:		28	2278	Mon 2023-06-05 12:46:13
+Mayor posición:		43	475787	Mon 2023-06-05 12:46:14
+
